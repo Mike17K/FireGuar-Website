@@ -1,0 +1,135 @@
+
+.signin{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.signin .logo{
+    width: 100%;
+    text-align: center;
+    max-width: 450px;
+    margin: 60px 0 40px 0;
+}
+
+.providers-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 450px;
+    background: var(--color-white);
+    box-shadow: 0px 0px 2px rgba(0,0,0,0.1);
+    border-radius: 15px;
+    box-sizing: border-box;
+    padding: 50px 50px 10px 50px;
+}
+
+h2{
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 0px;
+}
+
+p{
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 40px;
+    text-align: center;
+    color: var(--color-grey-mid);
+}
+
+.providers-list{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.providers-list > button{
+    width: 100%;
+    height: 2.5rem;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.providers-list > button:hover{
+    opacity: 0.9;
+}
+
+.google{
+    background: #4F93ED;
+}
+
+.apple{
+    background: #000;
+}
+
+.facebook{
+    background: #3059AA;
+}
+
+.seperator-text {
+    position: relative;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .seperator-text span {
+    background-color: var(--color-white);
+    padding: 0 10px;
+    position: relative; 
+    z-index: 1;
+  }
+  
+  .seperator-text::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--color-grey-mid);
+    z-index: 0; 
+  }
+
+  .providers-wrapper>input{
+    box-sizing: border-box;
+    border: 1px solid var(--color-grey-light);
+    border-radius: 5px;
+      width: 100%;
+      height: 2.5rem;
+      margin-bottom: 20px;
+      padding: 0 10px;
+  }
+  
+.checkbox{
+    width : 100%;
+    margin: 40px 0 20px 0;
+}
+
+.checkbox>input{
+    margin-right: 10px;
+}
+
+.checkbox>label{
+    font-size: 0.9rem;
+    color: var(--color-grey-mid);
+}
+
+a{
+    color: var(--color-blue-link);
+    text-decoration: none;
+}
+
+.footer-text a{
+    color: var(--color-primary);
+    text-decoration: none;
+}

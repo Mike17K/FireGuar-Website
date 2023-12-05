@@ -1,0 +1,14 @@
+#body{
+    background: var(--color-background);
+    margin: 0;
+}
+
+
+.main-content-container{
+    margin-top: 7rem;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
