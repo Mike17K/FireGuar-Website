@@ -31,11 +31,27 @@ export default function NavBar({visibleDropDown,setVisibleDropDown, isSearchInpu
     };
   }, [prevScrollPos, isNavbarVisible]);
   return (
-  <div className={`navbar-container ${isNavbarVisible?"visible":"hidden"}-navbar ${(prevScrollPos<10)?"":"shaddow"}`}>
-    <nav ref={navbarRef} >
-      <Link to="/" className="logo">skroutz</Link>
-      
-    </nav>
-  </div>  
+  <nav ref={navbarRef} className={`navbar-container ${isNavbarVisible?"visible":"hidden"}-navbar ${(prevScrollPos<10)?"":"shaddow"}`}>
+      <Link to="/" className="logo">
+        <img src="logo64.png" alt="logo" />
+      </Link>
+
+      <div className="nav-links">
+        <Link to="/forests" className="nav-link">
+          Forests
+        </Link>
+        <Link to="/about" className="nav-link">
+          About
+        </Link>
+        <Link to="/contact" className="nav-link">
+          Contact
+        </Link>
+      </div>
+
+      <Link to="/" className="logo">
+        <img src="logo64.png" alt="logo" />
+      </Link>
+
+  </nav>  
   )
 }

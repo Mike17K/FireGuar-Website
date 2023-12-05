@@ -5,7 +5,7 @@
     background: var(--color-background);
     
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
 }
 
@@ -27,7 +27,7 @@ nav{
     align-items: center;
     padding: 1.75rem 4rem;    
 }
-
+/*
 @media (max-width: 635px) {
     nav{
         background: #fff;
@@ -47,6 +47,7 @@ nav{
         padding: 1.75rem 1rem;
     }
 }
+*/
 
 /* Initially hidden */
 .hidden-navbar {
@@ -73,7 +74,7 @@ transition: transform 0.3s;
     color: var( --color-orange);
     margin-right: 1rem;
 }
-
+/*
 @media (max-width: 960px) {
     .logo{
         position: absolute;
@@ -81,3 +82,4 @@ transition: transform 0.3s;
     }
 }
 
+*/
