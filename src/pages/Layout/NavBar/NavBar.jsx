@@ -2,13 +2,12 @@ import React, { createRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./NavBar.css";
 
-export default function NavBar({visibleDropDown,setVisibleDropDown, isSearchInputSelected, setIsSearchInputSelected}) {
+export default function NavBar({ visibleDropDown, setVisibleDropDown }) {
+  const navbarRef = createRef(null);
 
-    const navbarRef = createRef(null);
+  const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY);
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
-    const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY);
-    const [isNavbarVisible, setIsNavbarVisible] = useState(true);
-    
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
@@ -31,27 +30,28 @@ export default function NavBar({visibleDropDown,setVisibleDropDown, isSearchInpu
     };
   }, [prevScrollPos, isNavbarVisible]);
   return (
-  <nav ref={navbarRef} className={`navbar-container ${isNavbarVisible?"visible":"hidden"}-navbar ${(prevScrollPos<10)?"":"shaddow"}`}>
-      <Link to="/" className="logo">
+    <nav
+      ref={navbarRef}
+      className={`navbar-container ${
+        isNavbarVisible ? "visible" : "hidden"
+      }-navbar ${prevScrollPos < 10 ? "" : "shaddow"} mx-auto`}
+    >
+      <Link to="/" className="w-[4rem] h-[4rem]">
         <img src="logo64.png" alt="logo" />
       </Link>
 
-      <div className="nav-links">
-        <Link to="/forests" className="nav-link">
-          Forests
-        </Link>
-        <Link to="/about" className="nav-link">
-          About
-        </Link>
-        <Link to="/contact" className="nav-link">
-          Contact
-        </Link>
+      <div className="nav-buttons-container">
+        <div>Our Work</div>
+        <div>About Us</div>
+        <div>Contact Us</div>
       </div>
 
-      <Link to="/" className="logo">
-        <img src="logo64.png" alt="logo" />
-      </Link>
-
-  </nav>  
-  )
+      <div className="flex gap-4 items-center">
+        <Link to="sign_in" className="bg-white p-4 rounded-full">
+          Login Sign up
+        </Link>
+        <div>More Info</div>
+      </div>
+    </nav>
+  );
 }

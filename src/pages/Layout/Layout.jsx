@@ -6,31 +6,37 @@ import { useEffect, useState } from "react";
 
 function Layout() {
   const [visibleDropDown, setVisibleDropDown] = useState("");
-  const [isSearchInputSelected,setIsSearchInputSelected] = useState(false);  
 
   useEffect(() => {
     // this is used to close the dropdown when the user clicks outside of it
     const handleClickOutsideOfSearchInput = (event) => {
-      if(event.target.closest(".popup") === null){
+      if (event.target.closest(".popup") === null) {
         setVisibleDropDown("");
       }
-      if (event.target.name !== "INPUT") setIsSearchInputSelected(false);
-    }
+    };
     document.addEventListener("mousedown", handleClickOutsideOfSearchInput);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutsideOfSearchInput);
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutsideOfSearchInput
+      );
     };
   }, []);
 
-
   return (
     <div id="body">
-        <NavBar visibleDropDown={visibleDropDown} setVisibleDropDown={setVisibleDropDown} isSearchInputSelected={isSearchInputSelected} setIsSearchInputSelected={setIsSearchInputSelected}/>
+      <NavBar
+        visibleDropDown={visibleDropDown}
+        setVisibleDropDown={setVisibleDropDown}
+      />
 
-        <div className="main-content-container h-[10000px]" >
-          <Outlet visibleDropDown={visibleDropDown} setVisibleDropDown={setVisibleDropDown}/>
-        </div>
+      <div className="main-content-container">
+        <Outlet
+          visibleDropDown={visibleDropDown}
+          setVisibleDropDown={setVisibleDropDown}
+        />
+      </div>
     </div>
   );
 }
