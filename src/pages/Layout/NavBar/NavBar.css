@@ -45,6 +45,7 @@ nav{
     align-items: center;
     color: white;
     font-size: medium;
+    cursor: pointer;
 }
 
 .nav-buttons-container *:first-child{

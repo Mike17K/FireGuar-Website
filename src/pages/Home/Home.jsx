@@ -20,32 +20,36 @@ export default function Home() {
 
   return (
     <div className="relative w-[1440px]">
+      <div id="toppage"></div>
       <div id="background-imgs" className="absolute top-0 left-0 w-full">
         <img
           src="images/wallpaper2.jpg"
           alt=""
-          className="w-full absolute top-0 left-0 -z-10"
+          className="w-full absolute top-0 left-0 h-[900px] -z-10"
           yoffset="0"
+          speed="0.7"
+        />
+        <img
+          src="images/wallpaper.png"
+          alt=""
+          className="w-full absolute top-0 left-0 -z-10"
+          yoffset="900"
           speed="0.7"
         />
         <img
           src="images/wallpaper3.png"
           alt=""
-          className="w-full absolute top-0 left-0 z-0"
-          yoffset="1000"
-          speed="0.7"
-        />
-        <img
-          src="images/wallpaper2.jpg"
-          alt=""
           className="w-full absolute top-0 left-0 -z-10"
-          yoffset="800"
+          yoffset="1800"
           speed="0.7"
         />
       </div>
 
       <div className="w-[1440px] h-[414px] left-0 top-[816px] absolute bg-black bg-opacity-100" />
-      <div className="left-[123px] top-[1310px] absolute text-white text-6xl font-bold font-['Inter']">
+      <div
+        id="ourvision"
+        className="left-[123px] top-[1310px] absolute text-white text-6xl font-bold font-['Inter']"
+      >
         Our Vision
       </div>
       <div className="w-[1440px] h-[735px] left-0 top-[81px] absolute bg-neutral-800 bg-opacity-40" />
@@ -143,7 +147,10 @@ export default function Home() {
           vigilance we've provided.
         </span>
       </div>
-      <div className="left-[113px] top-[2416px] absolute text-white text-6xl font-bold font-['Inter']">
+      <div
+        id="oursolution"
+        className="left-[113px] top-[2416px] absolute text-white text-6xl font-bold font-['Inter']"
+      >
         Our Solution
       </div>
       <img
@@ -161,7 +168,10 @@ export default function Home() {
       <div className="left-[113px] top-[4812px] absolute text-white text-6xl font-bold font-['Inter']">
         Impact
       </div>
-      <div className="left-[409px] top-[7283px] absolute text-white text-6xl font-bold font-['Inter']">
+      <div
+        id="contactus"
+        className="left-[409px] top-[7283px] absolute text-white text-6xl font-bold font-['Inter']"
+      >
         Connect With Us
       </div>
       <div className="w-[1134px] left-[178px] top-[5048px] absolute">

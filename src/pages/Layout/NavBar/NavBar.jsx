@@ -9,6 +9,16 @@ export default function NavBar({ visibleDropDown, setVisibleDropDown }) {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
   useEffect(() => {
+    const handleSmoothScroll = (e) => {
+      e.preventDefault();
+      const target = e.target.getAttribute("href");
+      const targetElement = document.querySelector(target);
+      targetElement.scrollIntoView({ behavior: "smooth" });
+    };
+    document.querySelectorAll(".nav-buttons-container div").forEach((div) => {
+      div.addEventListener("click", handleSmoothScroll);
+    });
+
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
       const scrollingDown = prevScrollPos < currentScrollPos;
@@ -26,6 +36,9 @@ export default function NavBar({ visibleDropDown, setVisibleDropDown }) {
     window.addEventListener("scroll", handleScroll);
 
     return () => {
+      document.querySelectorAll(".nav-buttons-container div").forEach((div) => {
+        div.removeEventListener("click", handleSmoothScroll);
+      });
       window.removeEventListener("scroll", handleScroll);
     };
   }, [prevScrollPos, isNavbarVisible]);
@@ -36,14 +49,22 @@ export default function NavBar({ visibleDropDown, setVisibleDropDown }) {
         isNavbarVisible ? "visible" : "hidden"
       }-navbar ${prevScrollPos < 10 ? "" : "shaddow"} mx-auto`}
     >
-      <Link to="/" className="w-[4rem] h-[4rem]">
+      <Link
+        to="/"
+        className="w-[4rem] h-[4rem]"
+        onClick={() => {
+          document
+            .querySelector("#toppage")
+            .scrollIntoView({ behavior: "smooth" });
+        }}
+      >
         <img src="logo64.png" alt="logo" />
       </Link>
 
       <div className="nav-buttons-container">
-        <div>Our Work</div>
-        <div>About Us</div>
-        <div>Contact Us</div>
+        <div href="#ourvision">Our Vision</div>
+        <div href="#oursolution">Our Solution</div>
+        <div href="#contactus">Contact Us</div>
       </div>
 
       <div className="flex gap-4 items-center">
