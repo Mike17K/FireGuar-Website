@@ -9,6 +9,7 @@ import SignIn from "./pages/SignIn/SignIn.jsx";
 import NoPage from "./pages/NoPage/NoPage.jsx";
 import ForestsPage from "./pages/Forests/Forests.jsx";
 import MapPage from "./pages/MapPage/MapPage.jsx";
+import ContactUsPage from "./pages/ContactUsPage/ContactUsPage.jsx";
 
 
 export default function App() {
@@ -26,7 +27,8 @@ export default function App() {
             <Route path="map" element={<PrivateRoute />}>
               <Route index element={<MapPage />} />
             </Route>
-              
+
+            <Route path="contactus" element={<ContactUsPage />} />
           </Route>      
 
           <Route path="sign_in" element={<SignIn />} /> 

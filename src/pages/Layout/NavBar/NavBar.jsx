@@ -1,9 +1,11 @@
-import React, { createRef, useEffect, useState } from "react";
+import React, { createRef, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./NavBar.css";
+import { AuthContext } from '../../../contexts/AuthContext';
 
 export default function NavBar({ visibleDropDown, setVisibleDropDown }) {
   const navbarRef = createRef(null);
+  const { currentUser } = useContext(AuthContext);
 
   const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
@@ -62,15 +64,35 @@ export default function NavBar({ visibleDropDown, setVisibleDropDown }) {
       </Link>
 
       <div className="nav-buttons-container">
-        <div href="#ourvision">Our Vision</div>
-        <div href="#oursolution">Our Solution</div>
-        <div href="#contactus">Contact Us</div>
+        {
+          currentUser ? (
+            <Link to="/forests">Forests</Link>
+          ) : (
+            <div href="#ourvision">Our Vision</div>            
+          )
+        }
+        {
+          currentUser ? (
+            <Link to="/map">Map</Link>
+          ) : (
+            <div href="#oursolution">Our Solution</div>
+          )
+        }
+        <Link to="/contactus">Contact Us</Link>
       </div>
 
       <div className="flex gap-4 items-center">
-        <Link to="sign_in" className="bg-white p-4 rounded-full">
-          Login Sign up
-        </Link>
+        {
+          currentUser ? (
+            <div className="h-[4rem] aspect-square rounded-full bg-white border-2 lex items-center justify-center overflow-hidden">
+              <img src={currentUser?.photoURL} alt="user img" />
+            </div>
+          ) : (
+            <Link to="/sign_in" className="bg-white p-4 rounded-full">
+              Login Sign up
+            </Link>
+          )
+        }
         <div>More Info</div>
       </div>
     </nav>

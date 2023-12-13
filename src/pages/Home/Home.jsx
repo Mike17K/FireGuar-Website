@@ -45,14 +45,14 @@ export default function Home() {
         />
       </div>
 
-      <div className="w-[1440px] h-[414px] left-0 top-[816px] absolute bg-black bg-opacity-100" />
+      <div className="w-[100%] h-[735px] left-0 top-[81px] absolute bg-neutral-800 bg-opacity-40" />
       <div
         id="ourvision"
         className="left-[123px] top-[1310px] absolute text-white text-6xl font-bold font-['Inter']"
       >
         Our Vision
       </div>
-      <div className="w-[1440px] h-[735px] left-0 top-[81px] absolute bg-neutral-800 bg-opacity-40" />
+      
       <div className="left-[281px] top-[355px] absolute text-white text-8xl font-black font-['Inter']">
         FireGuard Systems
       </div>
@@ -62,7 +62,8 @@ export default function Home() {
         more about the extraordinary journey we're on, changing the landscape
         for a sustainable future.
       </div>
-      <div className="w-[1324px] h-[325px] left-[84px] top-[869px] absolute text-white text-[50px] font-bold font-['Inter']">
+      <div className="w-[100%] h-[414px] left-0 top-[816px] absolute bg-black bg-opacity-100" />
+      <div className="w-[100%] h-[325px] left-[84px] top-[869px] absolute text-white text-[50px] font-bold font-['Inter']">
         Our solutions have implemented in 15 forests across Europe, covering
         over a million square kilometers of land in the past three years. Our
         efforts have successfully prevented about 10+ fire incidents each year!
