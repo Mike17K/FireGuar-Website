@@ -1,35 +1,38 @@
 [
-    {
-        "id": 1,
-        "name": "Forest One", 
+  {
+    "id": 1,
+    "name": "Forest One",
     "forestFirePropability": 0.9,
     "location": {
-        "lat": 45.815399,
-        "lng": 15.966568
+      "lat": 38.243934,
+      "lng": 21.905568
     },
     "curentTemperature": 38,
     "curentHumidity": 10,
     "curentWindSpeed": 12
-},
-    {"id": 2,
-        "name": "Forest Two", "forestFirePropability": 0.6,
+  },
+  {
+    "id": 2,
+    "name": "Forest Two",
+    "forestFirePropability": 0.6,
     "location": {
-        "lat": 45.815399,
-        "lng": 15.966568
+      "lat": 45.815399,
+      "lng": 15.966568
     },
     "curentTemperature": 32,
     "curentHumidity": 10,
     "curentWindSpeed": 12
-},
-    {
-        "id": 3,
-        "name": "Forest Three", "forestFirePropability": 0.2,
+  },
+  {
+    "id": 3,
+    "name": "Forest Three",
+    "forestFirePropability": 0.2,
     "location": {
-        "lat": 45.815399,
-        "lng": 15.966568
+      "lat": 45.815399,
+      "lng": 15.966568
     },
     "curentTemperature": 28,
     "curentHumidity": 10,
     "curentWindSpeed": 3
-}
+  }
 ]

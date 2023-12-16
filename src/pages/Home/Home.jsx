@@ -32,14 +32,14 @@ export default function Home() {
         <img
           src="images/wallpaper.png"
           alt=""
-          className="w-full absolute top-0 left-0 -z-10"
+          className="w-full absolute top-0 left-0 -z-20"
           yoffset="900"
           speed="0.7"
         />
         <img
           src="images/wallpaper3.png"
           alt=""
-          className="w-full absolute top-0 left-0 -z-10"
+          className="w-full absolute top-0 left-0 -z-30"
           yoffset="1800"
           speed="0.7"
         />
@@ -52,7 +52,7 @@ export default function Home() {
       >
         Our Vision
       </div>
-      
+
       <div className="left-[281px] top-[355px] absolute text-white text-8xl font-black font-['Inter']">
         FireGuard Systems
       </div>

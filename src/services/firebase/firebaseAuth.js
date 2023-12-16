@@ -1,5 +1,5 @@
-import { initializeApp  } from "firebase/app";
-import firebaseConfig from "./credentials.json";
+import { initializeApp } from "firebase/app";
+import firebaseConfig from "../../credentials/firebase.credentials.json";
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const app = initializeApp(firebaseConfig);
