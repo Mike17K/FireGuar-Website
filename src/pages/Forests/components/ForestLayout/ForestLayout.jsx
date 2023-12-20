@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./ForestLayout.css";
 import { Link } from "react-router-dom";
 
@@ -35,7 +35,52 @@ const { mapboxAccessToken } = mapboxCredentials;
 
 export default function ForestLayout({ data }) {
   const { id, name, forestFirePropability, location } = data;
-  const { curentTemperature, curentHumidity, curentWindSpeed } = data;
+  const {
+    curentTemperatureUrl,
+    curentHumidityUrl,
+    curentWindSpeedUrl,
+    cameraImageUrls,
+  } = data;
+
+  const [temperatureData, setTemperatureData] = useState([]);
+  const [humidityData, setHumidityData] = useState([20, 30, 40, 50, 60, 70]);
+  const [windSpeedData, setWindSpeedData] = useState([2, 3, 4, 5, 6, 7]);
+
+  //TODO make it call api instead of random from urls
+  useEffect(() => {
+    setInterval(() => {
+      setTemperatureData((prev) => {
+        if (prev.length > 5) {
+          prev.shift();
+        }
+        return [...prev, Math.floor(Math.random() * 100) / 100];
+      });
+      setHumidityData((prev) => {
+        if (prev.length > 5) {
+          prev.shift();
+        }
+        return [...prev, Math.floor(Math.random() * 100)];
+      });
+      setWindSpeedData((prev) => {
+        if (prev.length > 5) {
+          prev.shift();
+        }
+        return [...prev, Math.floor(Math.random() * 100) / 10];
+      });
+    }, 1000);
+    return () => {
+      clearInterval();
+    };
+  }, []);
+
+  const [cameraImages, setCameraImages] = useState([]);
+
+  //TODO make it call api for photos
+  useEffect(() => {
+    setInterval(() => {
+      //TODO make it call api for photos cameraImageUrls: list of urls
+    }, 10000);
+  }, []);
 
   return (
     <Link
@@ -80,104 +125,59 @@ export default function ForestLayout({ data }) {
 
           <div className="flex gap-4 justify-center items-center">
             <div>Fire Propability</div>
-            <div className="w-[4rem] aspect-square rounded-full border-2 border-black bg-gray-300 flex justify-center items-center">
+            <div className="w-[4rem] aspect-square rounded-full border-2 border-black bg-white flex justify-center items-center text-lg">
               {Math.floor(forestFirePropability * 100)}%
             </div>
           </div>
         </div>
         <div className="flex flex-col h-full justify-between">
           <h2>History</h2>
-          <div className="flex gap-2 items-center justify-between">
-            <img
-              className="w-[251px] h-[57px]"
-              src="https://via.placeholder.com/251x57"
-              alt="temperature graph"
-            />
-            <img
-              src="icons/temperature.png"
-              alt="temperature icon"
-              className="w-[50px] h-[50px]"
-            />
-            <span>{Math.floor(curentTemperature)}°C</span>
-          </div>
-          <div className="flex gap-2 items-center  justify-between">
-            <div className="w-[251px] h-[57px]">
-              <Chart
-                type="line"
-                options={{
-                  layout: {
-                    padding: {
-                      left: 0,
-                      right: 0,
-                      top: 0,
-                      bottom: 0,
-                    },
-                  },
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  scales: {
-                    y: {
-                      beginAtZero: true, // Start the y-axis from 0
-                      suggestedMin: 60, // Set the minimum value based on the lowest data point
-                      suggestedMax: 100, // Set the maximum value based on the highest data point
-                    },
-                  },
-                }}
-                name="humidity graph"
-                data={{
-                  labels: ["12am", "1pm", "2pm", "3pm", "4pm", "5pm"],
-                  datasets: [
-                    {
-                      label: "My First dataset",
-                      data: [65, 59, 80, 81, 56, 55, 40],
-                      fill: false,
-                      backgroundColor: "rgb(255, 99, 132)",
-                      borderColor: "rgba(255, 99, 132, 0.2)",
-                    },
-                  ],
-                }}
-              />
-            </div>
+          <DataGraphs
+            img={"icons/temperature.png"}
+            data={temperatureData}
+            measurement="°C"
+          />
 
-            <img
-              src="icons/humidity.png"
-              alt="humidity icon"
-              className="w-[50px] h-[50px]"
-            />
-            <span>{Math.floor(curentHumidity)}%</span>
-          </div>
-          <div className="flex gap-2 items-center justify-between">
-            <img
-              className="w-[251px] h-[57px]"
-              src="https://via.placeholder.com/251x57"
-              alt="wind graph"
-            />
-            <img
-              src="icons/wind.png"
-              alt="wind icon"
-              className="w-[50px] h-[50px]"
-            />
-            <span>{Math.floor(curentWindSpeed)} m/s</span>
-          </div>
+          <DataGraphs
+            img={"icons/humidity.png"}
+            data={humidityData}
+            measurement="%"
+          />
+
+          <DataGraphs
+            img={"icons/wind.png"}
+            data={windSpeedData}
+            measurement="m/s"
+          />
         </div>
+
         <div className="flex flex-col h-full justify-between">
           <h2>Live Phootage</h2>
           <div className="flex flex-col gap-2 items-center justify-between">
             <div className="w-full flex gap-2 items-center justify-between">
+              {cameraImages.map((img) => {
+                // fix this layout
+                return (
+                  <img className="w-full h-[70px]" src={img} alt="live view1" />
+                );
+              })}
               <img
                 className="w-full h-[70px]"
-                src="https://via.placeholder.com/107x70"
+                // src="https://via.placeholder.com/107x70"
+                src="https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=400"
                 alt="live view1"
               />
               <img
                 className="w-full h-[70px]"
-                src="https://via.placeholder.com/56x70"
+                // src="https://via.placeholder.com/56x70"
+                src="https://images.pexels.com/photos/167699/pexels-photo-167699.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                 alt="live view2"
               />
             </div>
             <img
               className="w-full h-[123px]"
-              src="https://via.placeholder.com/190x123"
+              // src="https://via.placeholder.com/190x123"
+              src="https://images.pexels.com/photos/7919/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
               alt="live view3"
             />
           </div>
@@ -198,5 +198,56 @@ export default function ForestLayout({ data }) {
         </MapContainer>
       </div>
     </Link>
+  );
+}
+
+function DataGraphs({ img, data, measurement }) {
+  const currentValue = data.length > 0 ? data[data.length - 1] : " - ";
+  return (
+    <div className="flex gap-2 items-center justify-between">
+      <div className="w-[251px] h-[57px]">
+        <Chart
+          type="line"
+          options={{
+            layout: {
+              padding: {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+              },
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true, // Start the y-axis from 0
+                // suggestedMin: 60, // Set the minimum value based on the lowest data point
+                // suggestedMax: 100, // Set the maximum value based on the highest data point
+              },
+            },
+          }}
+          name="humidity graph"
+          data={{
+            labels: ["12am", "1pm", "2pm", "3pm", "4pm", "5pm"],
+            datasets: [
+              {
+                label: "My First dataset",
+                data: data,
+                fill: false,
+                backgroundColor: "rgb(255, 99, 132)",
+                borderColor: "rgba(255, 99, 132, 0.2)",
+              },
+            ],
+          }}
+        />
+      </div>
+
+      <img src={img} alt="humidity icon" className="w-[50px] h-[50px]" />
+      <span className="w-[50px] text-right">
+        {currentValue}
+        {measurement}
+      </span>
+    </div>
   );
 }
