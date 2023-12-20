@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ForestLayout.css";
 import { Link } from "react-router-dom";
 
@@ -84,7 +84,7 @@ export default function ForestLayout({ data }) {
 
   return (
     <Link
-      to={"/map?id=" + id}
+      to={"/map?id=" + id + "&lat=" + location.lat + "&lng=" + location.lng}
       className={
         `w-full h-[366px] rounded-[13px] p-4 shadow-inner shadow-gray-600 ` +
         ForeestColor(forestFirePropability)
