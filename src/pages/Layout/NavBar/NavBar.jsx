@@ -53,7 +53,7 @@ export default function NavBar({ visibleDropDown, setVisibleDropDown }) {
     >
       <Link
         to="/"
-        className="w-[4rem] h-[4rem]"
+        className="w-[4rem] h-[4rem] flex-shrink-0"
         onClick={() => {
           document
             .querySelector("#toppage")
@@ -63,7 +63,7 @@ export default function NavBar({ visibleDropDown, setVisibleDropDown }) {
         <img src="logo64.png" alt="logo" />
       </Link>
 
-      <div className="nav-buttons-container">
+      <div className="nav-buttons-container w-full">
         {
           currentUser ? (
             <Link to="/forests">Forests</Link>
@@ -84,7 +84,7 @@ export default function NavBar({ visibleDropDown, setVisibleDropDown }) {
       <div className="flex gap-4 items-center">
         {
           currentUser ? (
-            <div className="h-[4rem] aspect-square rounded-full bg-white border-2 lex items-center justify-center overflow-hidden">
+            <div className="h-[4rem] aspect-square rounded-full bg-white border-2 lex items-center justify-center overflow-hidden flex-shrink-0">
               <img src={currentUser?.photoURL} alt="user img" />
             </div>
           ) : (

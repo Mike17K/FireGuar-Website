@@ -5,7 +5,6 @@
     max-width: 1440px;
     background-color: #7d7d7dc0;
 
-    
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -32,12 +31,14 @@ nav{
 
 .nav-buttons-container{
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 0.2rem;
 }
 
 .nav-buttons-container *{
     background: #000;
-    width: 10rem;
+    width: 30%;
     height: 3rem;
     background-color: rgb(132 204 22 );
     display: flex;

@@ -204,8 +204,8 @@ export default function ForestLayout({ data }) {
 function DataGraphs({ img, data, measurement }) {
   const currentValue = data.length > 0 ? data[data.length - 1] : " - ";
   return (
-    <div className="flex gap-2 items-center justify-between">
-      <div className="w-[251px] h-[57px]">
+    <div className="flex gap-2 items-center justify-between w-full">
+      <div className="w-[150px] h-[57px]">
         <Chart
           type="line"
           options={{
@@ -242,12 +242,13 @@ function DataGraphs({ img, data, measurement }) {
           }}
         />
       </div>
-
+    <div className="flex items-center justify-between gap-2 flex-shrink-0 w-[100px]">
       <img src={img} alt="humidity icon" className="w-[50px] h-[50px]" />
       <span className="w-[50px] text-right">
         {currentValue}
         {measurement}
       </span>
+    </div>
     </div>
   );
 }

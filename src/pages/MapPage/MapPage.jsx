@@ -7,22 +7,40 @@ import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import mapboxCredentials from "../../credentials/mapbox.credentials.json";
+import SensorModal from "./components/SensorModal";
+import CameraModal from "./components/CameraModal";
+import WindSensorModal from "./components/WindSensorModal";
 
 const { mapboxAccessToken } = mapboxCredentials;
 
 // Sensor icon
 const sensorIcon = new L.Icon({
-  iconUrl: "icons/location.png", // TODO change icon
+  iconUrl: "icons/map/tree_sensor_icon.png", 
+  iconSize: [20, 20],
+});
+
+const sensorIconActive = new L.Icon({
+  iconUrl: "icons/map/tree_sensor_icon_active.png", 
   iconSize: [20, 20],
 });
 
 const cameraIcon = new L.Icon({
-  iconUrl: "icons/location.png", // TODO change icon
+  iconUrl: "icons/map/camera_icon.png",
+  iconSize: [20, 20],
+});
+
+const cameraIconActive = new L.Icon({
+  iconUrl: "icons/map/camera_icon_active.png",
   iconSize: [20, 20],
 });
 
 const windIcon = new L.Icon({
-  iconUrl: "icons/location.png", // TODO change icon
+  iconUrl: "icons/map/wind_sensor_icon.png",
+  iconSize: [20, 20],
+});
+
+const windIconActive = new L.Icon({
+  iconUrl: "icons/map/wind_sensor_icon_active.png",
   iconSize: [20, 20],
 });
 
@@ -35,6 +53,8 @@ export default function MapPage() {
   const [treesensors, setTreesensors] = useState([]);
   const [cameras, setCameras] = useState([]);
   const [windsensors, setWindsensors] = useState([]);
+
+  const [focusedElement, setFocusedElement] = useState({id:null,element:null});
 
   useEffect(() => {
     // TODO fetch data from api
@@ -62,48 +82,61 @@ export default function MapPage() {
         scrollWheelZoom={true}
         zoomControl={false}
         attributionControl={false}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "100%" , zIndex: 0 }}
       >
         <TileLayer
           url={`https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
         />
         {treesensors.map((sensor) => (
           <Marker
-            key={sensor.id}
+            key={"s-"+sensor.id}
             position={[sensor.lat, sensor.lng]}
-            icon={sensorIcon}
+            icon={(focusedElement.id === "s-"+sensor.id)? sensorIconActive:sensorIcon}
             eventHandlers={{
               click: () => {
-                console.log("marker clicked");
+                setFocusedElement({id:"s-"+sensor.id,element:sensor});
               },
             }}
           />
         ))}
         {cameras.map((camera) => (
           <Marker
-            key={camera.id}
+            key={"c-"+camera.id}
             position={[camera.lat, camera.lng]}
-            icon={cameraIcon}
+            icon={(focusedElement.id === "c-"+camera.id)? cameraIconActive:cameraIcon}
             eventHandlers={{
               click: () => {
-                console.log("marker clicked");
+                setFocusedElement({id:"c-"+camera.id,element:camera});
               },
             }}
           />
         ))}
         {windsensors.map((sensor) => (
           <Marker
-            key={sensor.id}
+            key={"w-"+sensor.id}
             position={[sensor.lat, sensor.lng]}
-            icon={windIcon}
+            icon={(focusedElement.id === "w-"+sensor.id)? windIconActive:windIcon}
             eventHandlers={{
               click: () => {
-                console.log("marker clicked");
+                setFocusedElement({id:"w-"+sensor.id,element:sensor});
               },
             }}
           />
         ))}
+        {
+          focusedElement.id && focusedElement.id[0] === 's' && <SensorModal sensor={focusedElement.element} />
+        }
+        {
+          focusedElement.id && focusedElement.id[0] === 'c' && <CameraModal camera={focusedElement.element} />
+        }
+        {
+          focusedElement.id && focusedElement.id[0] === 'w' && <WindSensorModal station={focusedElement.element} />
+        }
+        
+        
       </MapContainer>
+
+      
     </div>
   );
 }
