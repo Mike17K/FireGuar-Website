@@ -23,30 +23,44 @@ export default function SensorModal({sensor,closeModal}) {
       cameraImageUrls,
     } = sensor;
   
-    const [temperatureData, setTemperatureData] = useState([20, 30, 40, 50, 60, 70]);
-    const [humidityData, setHumidityData] = useState([20, 30, 40, 50, 60, 70]);
-    const [co2Data, setCo2Data] = useState([20, 30, 40, 50, 60, 70]);
+    const [timeData, setTimeData] = useState([]); 
+    const [temperatureData, setTemperatureData] = useState([]);
+    const [humidityData, setHumidityData] = useState([]);
+    const [co2Data, setCo2Data] = useState([]);
+
+    useEffect(() => {
+      setTemperatureData([]);
+      setHumidityData([]);
+      setCo2Data([]);
+    }, [sensor]);
 
     //TODO make it call api instead of random from urls
   useEffect(() => {
     setInterval(() => {
+      const N = 50;
       setTemperatureData((prev) => {
-        if (prev.length > 5) {
+        if (prev.length > N) {
           prev.shift();
         }
         return [...prev, Math.floor(Math.random() * 100) / 100];
       });
       setHumidityData((prev) => {
-        if (prev.length > 5) {
+        if (prev.length > N) {
           prev.shift();
         }
         return [...prev, Math.floor(Math.random() * 100)];
       });
       setCo2Data((prev) => {
-        if (prev.length > 5) {
+        if (prev.length > N) {
           prev.shift();
         }
         return [...prev, Math.floor(Math.random() * 100) / 10];
+      });
+      setTimeData((prev) => {
+        if (prev.length > N) {
+          prev.shift();
+        }
+        return [...prev, new Date().toLocaleTimeString([], { hour12: true })];
       });
     }, 1000);
     return () => {
@@ -57,7 +71,7 @@ export default function SensorModal({sensor,closeModal}) {
 
   return (
     <div className='z-[10000] fixed right-4 top-[6rem] bg-white bottom-4 w-[300px] rounded-lg px-10'>
-        <button onClick={closeModal} className='absolute right-2 top-1 font-bold'>x</button>
+        <button onClick={closeModal} className='absolute right-2 top-1 font-bold hover:bg-red-500 w-6 h-6 rounded-full hover:text-white text-center items-center'>x</button>
 
         <div className='text-center text-[1.5rem] mt-[20px]'>
           Sensor: {id}
@@ -71,12 +85,12 @@ export default function SensorModal({sensor,closeModal}) {
         <div className='text-[1rem] mt-[20px] flex items-center justify-between gap-2'>
           <div className='flex items-center justify-center gap-2'>
             <img src="icons/temperature.png" alt="temp icon" width={30} height={30}/>
-            {temperatureData.length > 0?temperatureData[-1]:"-"}°C
+            {temperatureData.length > 0?temperatureData[temperatureData.length-1]:"-"}°C
           </div>
           <div className='flex items-center justify-center gap-2'>
             <img src="icons/humidity.png" alt="humidity icon" width={30} height={30}/>
             {
-              humidityData.length > 0?humidityData[-1]:"-"
+              humidityData.length > 0?humidityData[humidityData.length-1]:"-"
             }%
           </div>
         </div>
@@ -84,7 +98,7 @@ export default function SensorModal({sensor,closeModal}) {
           <div className='flex items-center justify-center gap-2'>
             <img src="icons/CO2.png" alt="co2 icon" width={30} height={30}/>
             {
-              co2Data.length > 0?co2Data[-1]:"-"
+              co2Data.length > 0?co2Data[co2Data.length-1]:"-"
             }ppm
           </div>
         </div>
@@ -93,7 +107,6 @@ export default function SensorModal({sensor,closeModal}) {
         <div className='flex flex-col justify-center items-center h-[70%] w-[80%] absolute left-2 right-2 bottom-2 mx-auto'>
           <h1 className='text-[25px]'>History</h1>
           <div>
-
         <Chart
           type="line"
           options={{
@@ -121,7 +134,7 @@ export default function SensorModal({sensor,closeModal}) {
             datasets: [
               {
                 label: "My First dataset",
-                data: temperatureData,
+                data: temperatureData.slice(-6),
                 fill: false,
                 backgroundColor: "rgb(255, 99, 132)",
                 borderColor: "rgba(255, 99, 132, 0.2)",
@@ -131,6 +144,19 @@ export default function SensorModal({sensor,closeModal}) {
           />
           </div>
 
+          <div className='w-full h-full mb-4 bg-gray-100 shadow-inner overflow-scroll overflow-x-hidden'>
+            {
+             temperatureData.map((data,index)=>(
+              <div className='text-center flex justify-between px-2 py-1 mt-1 bg-white w-[90%] mx-auto shadow-md rounded'>
+                <span>{timeData[temperatureData.length - index-1]}</span>
+                <span>{temperatureData[temperatureData.length - index-1]}°C</span>
+                <span>{humidityData[temperatureData.length - index-1]}%</span>
+                <span>{co2Data[temperatureData.length - index-1]}ppm</span>
+              </div>
+             ))
+            }
+            
+          </div>
 </div>
         
     </div>
