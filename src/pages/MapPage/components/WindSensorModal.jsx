@@ -2,7 +2,7 @@ import React from 'react'
 
 
 // TODO implement this component
-export default function WindSensorModal({station}) {
+export default function WindSensorModal({station,closeModal}) {
   if (!station) return null;
 
 

@@ -1,0 +1,5 @@
+/* Add this CSS to remove the white background */
+.custom-marker-icon {
+    background: none !important;
+  }
+  

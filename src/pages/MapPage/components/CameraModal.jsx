@@ -1,7 +1,7 @@
 import React from 'react'
 
 // TODO implement this component
-export default function CameraModal({camera}) {
+export default function CameraModal({camera,closeModal}) {
     if (!camera) return null;
 
   return (

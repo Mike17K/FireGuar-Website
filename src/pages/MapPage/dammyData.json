@@ -3,37 +3,58 @@
     {
       "id": 1,
       "lat": 38.29291,
-      "lng": 21.905664
+      "lng": 21.905664,
+      "temperature": 30,
+      "humidity": 50,
+      "co2": 100
     },
     {
       "id": 2,
       "lat": 38.27291,
-      "lng": 21.815664
+      "lng": 21.815664,
+      "temperature": 31,
+      "humidity": 51,
+      "co2": 101
     },
     {
       "id": 3,
       "lat": 38.27291,
-      "lng": 21.965664
+      "lng": 21.965664,
+      "temperature": 26,
+      "humidity": 52,
+      "co2": 102
     },
     {
       "id": 4,
       "lat": 38.23291,
-      "lng": 21.965664
+      "lng": 21.965664,
+      "temperature": 25,
+      "humidity": 53,
+      "co2": 103
     },
     {
       "id": 5,
       "lat": 38.23291,
-      "lng": 21.915664
+      "lng": 21.915664,
+      "temperature": 70,
+      "humidity": 54,
+      "co2": 150
     },
     {
       "id": 6,
       "lat": 38.21191,
-      "lng": 21.865664
+      "lng": 21.865664,
+      "temperature": 42,
+      "humidity": 55,
+      "co2": 120
     },
     {
       "id": 7,
       "lat": 38.21291,
-      "lng": 21.765664
+      "lng": 21.765664,
+      "temperature": 50,
+      "humidity": 56,
+      "co2": 135
     }
   ],
   "cameras": [
