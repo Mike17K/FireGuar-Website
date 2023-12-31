@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./MapPage.css";
 import dammyData from "./dammyData.json";
 
 // leaflet
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, ZoomControl, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import mapboxCredentials from "../../credentials/mapbox.credentials.json";
-import SensorModal from "./components/SensorModal";
+import SensorModal from "./components/SensorModal/SensorModal.jsx";
 import CameraModal from "./components/CameraModal";
 import WindSensorModal from "./components/WindSensorModal";
 
@@ -24,11 +24,17 @@ const cameraIconActive = new L.Icon({
   iconSize: [20, 20],
 });
 
+
+
 export default function MapPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const id = searchParams.get("id"); // use this to target sensors position
   const lat = searchParams.get("lat");
   const lng = searchParams.get("lng");
+
+  const [zoomLevel, setZoomLevel] = useState(10);
+  const zoomIn = () => setZoomLevel((prevZoom) => Math.min(prevZoom + 1, 20));
+  const zoomOut = () => setZoomLevel((prevZoom) => Math.max(prevZoom - 1, 1));
 
   const [treesensors, setTreesensors] = useState([]);
   const [cameras, setCameras] = useState([]);
@@ -57,13 +63,15 @@ export default function MapPage() {
   return (
     <div className="w-[100vw] h-[100vh]">
       <MapContainer
+        zoom={zoomLevel} 
         center={[lat || 8.243934, lng || 21.905568]}
-        zoom={10}
         scrollWheelZoom={true}
         zoomControl={false}
         attributionControl={false}
         style={{ width: "100%", height: "100%" , zIndex: 0 }}
       >
+        <ControlMapView zoom={zoomLevel} setZoom={setZoomLevel}/>
+
         <TileLayer
           url={`https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
         />
@@ -144,11 +152,7 @@ export default function MapPage() {
         {
           focusedElement.id && focusedElement.id[0] === 'w' && <WindSensorModal station={focusedElement.element} closeModal={(e)=>setFocusedElement({id:null,element:null})}/>
         }
-        
-        
       </MapContainer>
-
-  
 
     </div>
   );
@@ -157,4 +161,34 @@ export default function MapPage() {
 
 function SensorColorChoise(value){
   return value < 30 ? "#93EF2A" : value < 60 ? "#EFE72A" : "#D52A2A";
+}
+
+
+function ControlMapView({ zoom, setZoom }) {
+  const map = useMap();
+  const zoomRef = useRef(zoom);
+  useEffect(() => {
+    zoomRef.current.style.left = `${(zoom - 1) * 5}%`;
+  }
+  , [zoom]);
+
+  return <div className="fixed z-[1000] flex gap-2 justify-between px-2 items-center rounded-full bottom-2 left-1/2 -translate-x-1/2 bg-white w-[150px] h-[20px]">
+  <button
+   onClick={
+     () => {
+       map.setView(map.getCenter(), zoom - 1);
+       setZoom(zoom => Math.max(zoom - 1, 1))
+      }
+    }>-</button>
+    <div className="w-[80%] bg-black rounded-full h-2 relative">
+        <div ref={zoomRef} className={`left-[] w-4 h-4 rounded-full bg-white border-4 border-black absolute -translate-y-1`}></div>
+    </div>
+    <button
+    onClick={
+      () => {
+        map.setView(map.getCenter(), zoom + 1);
+        setZoom(zoom => Math.min(zoom + 1, 20))
+      }
+    }>+</button>
+  </div>;
 }

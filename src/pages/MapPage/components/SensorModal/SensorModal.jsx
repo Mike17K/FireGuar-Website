@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import './SensorModal.css'
 
 // chartjs
 import { Chart } from "react-chartjs-2";
@@ -68,9 +69,8 @@ export default function SensorModal({sensor,closeModal}) {
     };
   }, []);
 
-
   return (
-    <div className='z-[10000] fixed right-4 top-[6rem] bg-white bottom-4 w-[300px] rounded-lg px-10'>
+    <div className='z-[10000] fixed right-4 top-[6rem] bg-white bottom-4 w-[300px] rounded-lg px-10 cursor-default'>
         <button onClick={closeModal} className='absolute right-2 top-1 font-bold hover:bg-red-500 w-6 h-6 rounded-full hover:text-white text-center items-center'>x</button>
 
         <div className='text-center text-[1.5rem] mt-[20px]'>
@@ -143,8 +143,8 @@ export default function SensorModal({sensor,closeModal}) {
           }}
           />
           </div>
-
-          <div className='w-full h-full mb-4 bg-gray-100 shadow-inner overflow-scroll overflow-x-hidden'>
+          
+          <div className='scrollable-list w-full h-full mb-4 bg-gray-100 shadow-inner overflow-x-hidden overflow-y-auto'>
             {
              temperatureData.map((data,index)=>(
               <div className='text-center flex justify-between px-2 py-1 mt-1 bg-white w-[90%] mx-auto shadow-md rounded'>
@@ -155,8 +155,8 @@ export default function SensorModal({sensor,closeModal}) {
               </div>
              ))
             }
-            
           </div>
+
 </div>
         
     </div>
