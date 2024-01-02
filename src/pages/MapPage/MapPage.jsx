@@ -73,6 +73,7 @@ export default function MapPage() {
         scrollWheelZoom={true}
         zoomControl={false}
         attributionControl={false}
+        doubleClickZoom={false}
         style={{ width: "100%", height: "100%", zIndex: 0 }}
       >
         <ControlMapView zoom={zoomLevel} setZoom={setZoomLevel} />
