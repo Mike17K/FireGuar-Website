@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./MapPage.css";
 import dammyData from "./dammyData.json";
@@ -10,13 +10,13 @@ import IconsExplanationView from "./components/IconsExplanation.jsx";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import mapboxCredentials from "../../credentials/mapbox.credentials.json";
+
 import SensorModal from "./components/SensorModal/SensorModal.jsx";
 import CameraModal from "./components/CameraModal";
 import WindSensorModal from "./components/WindSensorModal";
 import TemperatureMap from "./components/TemperatureMap.jsx";
 
-const { mapboxAccessToken } = mapboxCredentials;
+const { mapboxAccessToken } = process.env.mapboxAccessToken;
 
 const cameraIcon = new L.Icon({
   iconUrl: "icons/map/camera_icon.png",

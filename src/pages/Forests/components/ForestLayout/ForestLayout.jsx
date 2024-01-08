@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 // leaflet
 import { CircleMarker, MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import mapboxCredentials from "../../../../credentials/mapbox.credentials.json";
 
 // chartjs
 import { Chart } from "react-chartjs-2";
@@ -31,7 +30,7 @@ function ForeestColor(propability) {
   }
 }
 
-const { mapboxAccessToken } = mapboxCredentials;
+const { mapboxAccessToken } = process.env.mapboxAccessToken;
 
 export default function ForestLayout({ data }) {
   const { id, name, forestFirePropability, location } = data;
@@ -242,13 +241,13 @@ function DataGraphs({ img, data, measurement }) {
           }}
         />
       </div>
-    <div className="flex items-center justify-between gap-2 flex-shrink-0 w-[100px]">
-      <img src={img} alt="humidity icon" className="w-[50px] h-[50px]" />
-      <span className="w-[50px] text-right">
-        {currentValue}
-        {measurement}
-      </span>
-    </div>
+      <div className="flex items-center justify-between gap-2 flex-shrink-0 w-[100px]">
+        <img src={img} alt="humidity icon" className="w-[50px] h-[50px]" />
+        <span className="w-[50px] text-right">
+          {currentValue}
+          {measurement}
+        </span>
+      </div>
     </div>
   );
 }

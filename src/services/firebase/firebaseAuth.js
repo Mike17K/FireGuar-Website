@@ -1,8 +1,16 @@
 import { initializeApp } from "firebase/app";
-import firebaseConfig from "../../credentials/firebase.credentials.json";
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
-const app = initializeApp(firebaseConfig);
+const credentials = {
+  apiKey: process.env.apiKey,
+  authDomain: process.env.authDomain,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storageBucket,
+  messagingSenderId: process.env.messagingSenderId,
+  appId: process.env.appId,
+  measurementId: process.env.measurementId,
+};
+const app = initializeApp(credentials);
 const auth = getAuth(app);
 
 export default auth;

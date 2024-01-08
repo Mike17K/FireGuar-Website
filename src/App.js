@@ -19,7 +19,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-          
+
             <Route path="forests" element={<PrivateRoute />}>
               <Route index element={<ForestsPage />} />
             </Route>
@@ -29,9 +29,9 @@ export default function App() {
             </Route>
 
             <Route path="contactus" element={<ContactUsPage />} />
-          </Route>      
+          </Route>
 
-          <Route path="sign_in" element={<SignIn />} /> 
+          <Route path="sign_in" element={<SignIn />} />
 
           <Route path="*" element={<NoPage />} />
         </Routes>
