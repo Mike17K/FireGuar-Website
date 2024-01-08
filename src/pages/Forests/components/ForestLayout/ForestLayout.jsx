@@ -15,10 +15,17 @@ import {
   CategoryScale,
   PointElement,
   LineElement,
+  LineController,
 } from "chart.js";
 
 // setup chartjs
-ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement);
+ChartJS.register(
+  LinearScale,
+  CategoryScale,
+  PointElement,
+  LineElement,
+  LineController
+);
 
 function ForeestColor(propability) {
   if (propability < 0.4) {
