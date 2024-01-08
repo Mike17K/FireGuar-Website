@@ -30,7 +30,7 @@ function ForeestColor(propability) {
   }
 }
 
-const { mapboxAccessToken } = process.env.mapboxAccessToken;
+const { mapboxAccessToken } = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
 export default function ForestLayout({ data }) {
   const { id, name, forestFirePropability, location } = data;
