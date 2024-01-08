@@ -16,7 +16,7 @@ import CameraModal from "./components/CameraModal";
 import WindSensorModal from "./components/WindSensorModal";
 import TemperatureMap from "./components/TemperatureMap.jsx";
 
-const { mapboxAccessToken } = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+const mapboxAccessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
 const cameraIcon = new L.Icon({
   iconUrl: "icons/map/camera_icon.png",
