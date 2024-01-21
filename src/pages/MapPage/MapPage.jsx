@@ -35,8 +35,8 @@ export default function MapPage() {
   const lng = searchParams.get("lng");
 
   const [zoomLevel, setZoomLevel] = useState(10);
-  const zoomIn = () => setZoomLevel((prevZoom) => Math.min(prevZoom + 1, 20));
-  const zoomOut = () => setZoomLevel((prevZoom) => Math.max(prevZoom - 1, 1));
+  // const zoomIn = () => setZoomLevel((prevZoom) => Math.min(prevZoom + 1, 20));
+  // const zoomOut = () => setZoomLevel((prevZoom) => Math.max(prevZoom - 1, 1));
 
   const [treesensors, setTreesensors] = useState([]);
   const [cameras, setCameras] = useState([]);
@@ -49,9 +49,6 @@ export default function MapPage() {
 
   useEffect(() => {
     // TODO fetch data from api
-    // fetch("http://localhost:3000/treesensors")
-    //   .then((res) => res.json())
-    //   .then((data) => setTreesensors(data));
     // fetch("http://localhost:3000/cameras")
     //   .then((res) => res.json())
     //   .then((data) => setCameras(data));
@@ -60,10 +57,19 @@ export default function MapPage() {
     //   .then((data) => setWindsensors(data));
 
     // TODO remove dammy data
-    setTreesensors(dammyData.treesensors);
+
+    // setTreesensors(dammyData.treesensors);
+    fetch("https://iot.alkalyss.gr/trees").then((res) => {
+      res.json().then((data) => {
+        setTreesensors(data);
+      });
+    });
     setCameras(dammyData.cameras);
     setWindsensors(dammyData.windsensors);
+
   }, []);
+
+  console.log("udpate - 1");
 
   return (
     <div className="w-[100vw] h-[100vh]">
@@ -88,7 +94,7 @@ export default function MapPage() {
           return (
             <Marker
               key={"s-" + sensor.id}
-              position={[sensor.lat, sensor.lng]}
+              position={[sensor.location[0], sensor.location[1]]}
               icon={
                 focusedElement.id === "s-" + sensor.id
                   ? new L.DivIcon({
@@ -161,18 +167,21 @@ export default function MapPage() {
         ))}
         {focusedElement.id && focusedElement.id[0] === "s" && (
           <SensorModal
+            key={focusedElement.id}
             sensor={focusedElement.element}
             closeModal={(e) => setFocusedElement({ id: null, element: null })}
           />
         )}
         {focusedElement.id && focusedElement.id[0] === "c" && (
           <CameraModal
+            key={focusedElement.id}
             camera={focusedElement.element}
             closeModal={(e) => setFocusedElement({ id: null, element: null })}
           />
         )}
         {focusedElement.id && focusedElement.id[0] === "w" && (
           <WindSensorModal
+            key={focusedElement.id}
             station={focusedElement.element}
             closeModal={(e) => setFocusedElement({ id: null, element: null })}
           />

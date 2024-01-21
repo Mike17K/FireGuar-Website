@@ -15,59 +15,89 @@ import {
 // setup chartjs
 ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement);
 
-export default function SensorModal({sensor,closeModal}) {
-    const { id, name, forestFirePropability, lat, lng } = sensor;
-    const {
-      curentTemperatureUrl,
-      curentHumidityUrl,
-      curentWindSpeedUrl,
-      cameraImageUrls,
-    } = sensor;
-  
-    const [timeData, setTimeData] = useState([]); 
-    const [temperatureData, setTemperatureData] = useState([]);
-    const [humidityData, setHumidityData] = useState([]);
-    const [co2Data, setCo2Data] = useState([]);
+export default function SensorModal({sensor,closeModal}) { 
+  const { id, location } = sensor;
+  const [lat, lng] = location;
 
-    useEffect(() => {
-      setTemperatureData([]);
-      setHumidityData([]);
-      setCo2Data([]);
-    }, [sensor]);
+  const [timeData, setTimeData] = useState([]);
+  const [temperatureData, setTemperatureData] = useState([]);
+  const [humidityData, setHumidityData] = useState([]);
+  const [co2Data, setCo2Data] = useState([]);
+  const [isMounted, setIsMounted] = useState(true);
 
-    //TODO make it call api instead of random from urls
   useEffect(() => {
-    setInterval(() => {
-      const N = 50;
-      setTemperatureData((prev) => {
-        if (prev.length > N) {
-          prev.shift();
-        }
-        return [...prev, Math.floor(Math.random() * 100) / 100];
-      });
-      setHumidityData((prev) => {
-        if (prev.length > N) {
-          prev.shift();
-        }
-        return [...prev, Math.floor(Math.random() * 100)];
-      });
-      setCo2Data((prev) => {
-        if (prev.length > N) {
-          prev.shift();
-        }
-        return [...prev, Math.floor(Math.random() * 100) / 10];
-      });
-      setTimeData((prev) => {
-        if (prev.length > N) {
-          prev.shift();
-        }
-        return [...prev, new Date().toLocaleTimeString([], { hour12: true })];
-      });
-    }, 1000);
+    setTemperatureData([]);
+    setHumidityData([]);
+    setCo2Data([]);
+    setIsMounted(true);
+
+    // Cleanup function
     return () => {
-      clearInterval();
+      setIsMounted(false);
     };
-  }, []);
+  }, [sensor]);
+
+  //TODO make it call API instead of random from URLs
+
+  async function updateTreeSensorData(N) {
+    if (!isMounted) return;
+
+    const newData = await fetch(`https://iot.alkalyss.gr/trees/${id}`)
+      .then((res) => res.json())
+      .catch((err) => {
+        console.log("Error: " + err);
+        return null;
+      });
+
+    if (newData === null) return;
+
+    setTemperatureData((prev) => {
+      if (prev.length > N) {
+        prev.shift();
+      }
+      return [...prev, Math.floor(newData.temperature * 100) / 100];
+    });
+
+    setHumidityData((prev) => {
+      if (prev.length > N) {
+        prev.shift();
+      }
+      return [...prev, Math.floor(newData.humidity * 100)];
+    });
+
+    setCo2Data((prev) => {
+      if (prev.length > N) {
+        prev.shift();
+      }
+      return [...prev, Math.floor(newData.co2 * 100) / 10];
+    });
+
+    setTimeData((prev) => {
+      if (prev.length > N) {
+        prev.shift();
+      }
+      return [...prev, new Date(newData.dateObserved).toLocaleTimeString([], { hour12: true })];
+    });
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await updateTreeSensorData(10);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    };
+
+    if (!isMounted) return;
+
+    setInterval(fetchData, 1000);
+
+    // Cleanup function
+    return () => {
+      setIsMounted(false);
+      clearInterval(fetchData);
+    };
+  }, [isMounted]);
+
+  console.log("udpate - 2");
 
   return (
     <div className='z-[10000] fixed right-4 top-[6rem] bg-white bottom-4 w-[300px] rounded-lg px-10 cursor-default'>
