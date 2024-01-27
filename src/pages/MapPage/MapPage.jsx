@@ -65,7 +65,12 @@ export default function MapPage() {
       });
     });
     setCameras(dammyData.cameras);
-    setWindsensors(dammyData.windsensors);
+    
+    fetch("https://iot.alkalyss.gr/wind").then((res) => {
+      res.json().then((data) => {
+        setWindsensors(data);
+      });
+    });    
 
   }, []);
 
@@ -140,7 +145,7 @@ export default function MapPage() {
         {windsensors.map((sensor) => (
           <Marker
             key={"w-" + sensor.id}
-            position={[sensor.lat, sensor.lng]}
+            position={[sensor.location[0], sensor.location[1]]}
             icon={
               focusedElement.id === "w-" + sensor.id
                 ? new L.DivIcon({
