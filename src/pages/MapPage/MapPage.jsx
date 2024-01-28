@@ -80,7 +80,7 @@ export default function MapPage() {
     <div className="w-[100vw] h-[100vh]">
       <MapContainer
         zoom={zoomLevel}
-        center={[lat || 8.243934, lng || 21.905568]}
+        center={[lat || 38.29291, lng || 21.905664]}
         scrollWheelZoom={true}
         zoomControl={false}
         attributionControl={false}
