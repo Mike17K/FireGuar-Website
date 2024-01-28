@@ -97,8 +97,6 @@ export default function SensorModal({sensor,closeModal}) {
     };
   }, [isMounted]);
 
-  console.log("udpate - 2");
-
   return (
     <div className='z-[10000] fixed right-4 top-[6rem] bg-white bottom-4 w-[300px] rounded-lg px-10 cursor-default'>
         <button onClick={closeModal} className='absolute right-2 top-1 font-bold hover:bg-red-500 w-6 h-6 rounded-full hover:text-white text-center items-center'>x</button>
