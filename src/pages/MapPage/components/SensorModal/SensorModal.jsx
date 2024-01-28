@@ -62,14 +62,14 @@ export default function SensorModal({sensor,closeModal}) {
       if (prev.length > N) {
         prev.shift();
       }
-      return [...prev, Math.floor(newData.humidity * 100)];
+      return [...prev, Math.floor(newData.humidity * 100)/100];
     });
 
     setCo2Data((prev) => {
       if (prev.length > N) {
         prev.shift();
       }
-      return [...prev, Math.floor(newData.co2 * 100) / 10];
+      return [...prev, Math.floor(newData.co2 * 100) / 100];
     });
 
     setTimeData((prev) => {
