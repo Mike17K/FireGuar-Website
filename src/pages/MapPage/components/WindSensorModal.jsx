@@ -144,7 +144,7 @@ export default function WindSensorModal({station,closeModal}) {
             datasets: [
               {
                 label: "My First dataset",
-                data: timeData.slice(-6),
+                data: windSpeedData.slice(-6),
                 fill: false,
                 backgroundColor: "rgb(255, 99, 132)",
                 borderColor: "rgba(255, 99, 132, 0.2)",
