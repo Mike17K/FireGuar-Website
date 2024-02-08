@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import "./SignIn.css";
-import {signInEmailAndPassword,signInWithGoogle} from '../../services/firebase/firebaseAuth';
+import {signInWithGoogle} from '../../services/firebase/firebaseAuth';
 import { AuthContext } from '../../contexts/AuthContext';
 
 
@@ -14,7 +14,7 @@ export default function SignIn() {
       navigate("/");
     }
   }
-  , [currentUser]);
+  , [currentUser,navigate]);
 
   return (
     <section className='signin'>

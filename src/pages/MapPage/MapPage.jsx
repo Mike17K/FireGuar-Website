@@ -28,6 +28,15 @@ const cameraIconActive = new L.Icon({
   iconSize: [20, 20],
 });
 
+// const CustomIcon = L.DivIcon.extend({
+//   createIcon: function (oldIcon) {
+//     const div = L.DivIcon.prototype.createIcon.call(this, oldIcon);
+//     div.innerHTML = "<div class='rotate-["+this.options.rotationAngle+"deg] z-1000'>" + this.options.html + "</div>";
+//     return div;
+//   },
+// });
+
+
 export default function MapPage() {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id"); // use this to target sensors position
@@ -61,7 +70,7 @@ export default function MapPage() {
     };
   }, [id, lat, lng]);
   
-  async function updateTreeSensorData(N) {
+  async function updateSensorData(N) {
     if (!isMounted) return;
     
     fetch("https://iot.alkalyss.gr/trees").then((res) => {
@@ -80,7 +89,7 @@ export default function MapPage() {
   
   useEffect(() => {
     const fetchData = async () => {
-      await updateTreeSensorData(10);
+      await updateSensorData(10);
       await new Promise((resolve) => setTimeout(resolve, 1000));
     };
 
@@ -94,6 +103,13 @@ export default function MapPage() {
       clearInterval(fetchData);
     };
   }, [isMounted]);
+
+  useEffect(() => {
+    document.querySelectorAll(".w-svg").forEach((el) => {
+      el.style.transform = `rotate(${el.getAttribute("value")}deg)`;
+      el.style.display = "block";
+    });
+  }, [windsensors]);
 
   return (
     <div className="w-[100vw] h-[100vh]">
@@ -167,27 +183,27 @@ export default function MapPage() {
             position={[sensor.location[0], sensor.location[1]]}
             icon={
               focusedElement.id === "w-" + sensor.id
-                ? new L.DivIcon({
-                    className: "custom-marker-icon",
-                    html: `<svg width="20" height="20" viewBox="0 0 44 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4.67949 35L22 5L39.3205 35H4.67949Z" fill="#93EF2A" stroke="#FF0000" stroke-width="5"/>
-              </svg>`,
-                    iconSize: [20, 20],
-                  })
-                : new L.DivIcon({
-                    className: "custom-marker-icon",
-                    html: `<svg width="20" height="20" viewBox="0 0 44 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4.67949 35L22 5L39.3205 35H4.67949Z" fill="#93EF2A" stroke="black" stroke-width="5"/>
-              </svg>`,
-                    iconSize: [20, 20],
-                  })
+              ? new L.DivIcon({
+                className: "custom-marker-icon",
+                html: `<div><svg width="20" height="20" viewBox="0 0 44 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.67949 35L22 5L39.3205 35H4.67949Z" fill="#93EF2A" stroke="black" stroke-width="5"/>
+                </svg><svg class="w-svg" style="display: none;" value="${sensor.windDirection+45}" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 32 32"><path d="M3.41 2H16V0H1a1 1 0 0 0-1 1v16h2V3.41l28.29 28.3 1.41-1.41z" data-name="7-Arrow Up"/></svg></div>`,
+                iconSize: [20, 20],
+              })
+              : new L.DivIcon({
+                className: "custom-marker-icon",
+                html: `<div><svg width="20" height="20" viewBox="0 0 44 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.67949 35L22 5L39.3205 35H4.67949Z" fill="#93EF2A" stroke="black" stroke-width="5"/>
+                </svg><svg class="w-svg" style="display: none;" value="${sensor.windDirection+45}" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 32 32"><path d="M3.41 2H16V0H1a1 1 0 0 0-1 1v16h2V3.41l28.29 28.3 1.41-1.41z" data-name="7-Arrow Up"/></svg></div>`,
+                iconSize: [20, 20],
+              })
             }
             eventHandlers={{
               click: () => {
                 setFocusedElement({ id: "w-" + sensor.id, element: sensor });
               },
             }}
-          />
+            />
         ))}
         {focusedElement.id && focusedElement.id[0] === "s" && (
           <SensorModal

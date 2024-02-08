@@ -48,35 +48,34 @@ export default function ForestLayout({ data }) {
     cameraImageUrls,
   } = data;
 
-  const [temperatureData, setTemperatureData] = useState([]);
+  const [temperatureData, setTemperatureData] = useState([20, 30, 40, 50, 60, 70]);
   const [humidityData, setHumidityData] = useState([20, 30, 40, 50, 60, 70]);
   const [windSpeedData, setWindSpeedData] = useState([2, 3, 4, 5, 6, 7]);
 
   //TODO make it call api instead of random from urls
   useEffect(() => {
-    setInterval(() => {
-      setTemperatureData((prev) => {
-        if (prev.length > 5) {
-          prev.shift();
-        }
-        return [...prev, Math.floor(Math.random() * 100) / 100];
-      });
-      setHumidityData((prev) => {
-        if (prev.length > 5) {
-          prev.shift();
-        }
-        return [...prev, Math.floor(Math.random() * 100)];
-      });
-      setWindSpeedData((prev) => {
-        if (prev.length > 5) {
-          prev.shift();
-        }
-        return [...prev, Math.floor(Math.random() * 100) / 10];
-      });
-    }, 1000);
-    return () => {
-      clearInterval();
-    };
+    // no interval - for the hole day fetch data from backend
+    const temperatureUrl = '';
+    const humidityUrl = '';
+    const windSpeedUrl = '';
+
+    fetch(temperatureUrl).then((res) => res.json()).then((data) => {
+      // data length: 100
+      // data: list<temperature> one for each hour
+      setTemperatureData(data);
+    });
+
+    fetch(humidityUrl).then((res) => res.json()).then((data) => {
+      // data length: 100
+      // data: list<humidity> one for each hour
+      setHumidityData(data);
+    });
+
+    fetch(windSpeedUrl).then((res) => res.json()).then((data) => {
+      // data length: 100
+      // data: list<windSpeed> one for each hour
+      setWindSpeedData(data);
+    });
   }, []);
 
   const [cameraImages, setCameraImages] = useState([]);
@@ -211,7 +210,7 @@ function DataGraphs({ img, data, measurement }) {
   const currentValue = data.length > 0 ? data[data.length - 1] : " - ";
   return (
     <div className="flex gap-2 items-center justify-between w-full">
-      <div className="w-[150px] h-[57px]">
+      <div className="w-[350px] h-[80px]">
         <Chart
           type="line"
           options={{
@@ -235,7 +234,7 @@ function DataGraphs({ img, data, measurement }) {
           }}
           name="humidity graph"
           data={{
-            labels: ["12am", "1pm", "2pm", "3pm", "4pm", "5pm"],
+            labels: ["1am","2am","3am","4am","5am","6am","7am","8am","9am","10am","11am","12am", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm","12pm"],
             datasets: [
               {
                 label: "My First dataset",

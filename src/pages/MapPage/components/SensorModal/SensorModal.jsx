@@ -25,6 +25,7 @@ export default function SensorModal({sensor,closeModal}) {
   const [co2Data, setCo2Data] = useState([]);
   const [isMounted, setIsMounted] = useState(true);
 
+  const [isHistoryDataModalOpen, setIsHistoryDataModalOpen] = useState(false);
   useEffect(() => {
     setTemperatureData([]);
     setHumidityData([]);
@@ -82,7 +83,7 @@ export default function SensorModal({sensor,closeModal}) {
 
   useEffect(() => {
     const fetchData = async () => {
-      await updateTreeSensorData(10);
+      await updateTreeSensorData(100);
       await new Promise((resolve) => setTimeout(resolve, 1000));
     };
 
@@ -98,8 +99,13 @@ export default function SensorModal({sensor,closeModal}) {
   }, [isMounted]);
 
   return (
-    <div className='z-[10000] fixed right-4 top-[6rem] bg-white bottom-4 w-[300px] rounded-lg px-10 cursor-default'>
-        <button onClick={closeModal} className='absolute right-2 top-1 font-bold hover:bg-red-500 w-6 h-6 rounded-full hover:text-white text-center items-center'>x</button>
+      <div className={`z-[10000] fixed right-4 top-[6rem] bg-white bottom-4 transition-all duration-1000 w-[${isHistoryDataModalOpen?1000 : 350}px] rounded-lg px-10 cursor-default`}>
+        <div className='flex justify-end relative h-full'>
+          {
+            isHistoryDataModalOpen && <HistoryData />
+          }
+        <div className='w-[250px] h-full relative'>
+        <button onClick={closeModal} className='absolute right-2 top-1 font-bold hover:bg-red-500 w-6 h-6rounded-full hover:text-white text-center items-center'>x</button>
 
         <div className='text-center text-[1.5rem] mt-[20px]'>
           Sensor: {id}
@@ -132,9 +138,10 @@ export default function SensorModal({sensor,closeModal}) {
         </div>
         </div>
         
-        <div className='flex flex-col justify-center items-center h-[70%] w-[80%] absolute left-2 right-2 bottom-2 mx-auto'>
-          <h1 className='text-[25px]'>History</h1>
-          <div>
+        <div className='flex flex-col justify-center items-center h-[60%] w-[80%] absolute left-2 right-2 bottom-2 mx-auto'>
+            <h1 className='text-[25px]'>History</h1>
+            <button onClick={()=>setIsHistoryDataModalOpen(!isHistoryDataModalOpen)} className="bg-blue-500 text-white rounded-md w-[50px] h-[30px] text-[10px]">Show All</button>
+        <div>
         <Chart
           type="line"
           options={{
@@ -158,11 +165,11 @@ export default function SensorModal({sensor,closeModal}) {
           }}
           name="humidity graph"
           data={{
-            labels: ["12am", "1pm", "2pm", "3pm", "4pm", "5pm"],
+            labels: timeData,
             datasets: [
               {
                 label: "My First dataset",
-                data: temperatureData.slice(-6),
+                data: temperatureData,
                 fill: false,
                 backgroundColor: "rgb(255, 99, 132)",
                 borderColor: "rgba(255, 99, 132, 0.2)",
@@ -174,8 +181,8 @@ export default function SensorModal({sensor,closeModal}) {
           
           <div className='scrollable-list w-full h-full mb-4 bg-gray-100 shadow-inner overflow-x-hidden overflow-y-auto'>
             {
-             temperatureData.map((data,index)=>(
-              <div className='text-center flex justify-between px-2 py-1 mt-1 bg-white w-[90%] mx-auto shadow-md rounded'>
+              temperatureData.map((data,index)=>(
+                <div className='text-center flex justify-between px-2 py-1 mt-1 bg-white w-[90%] mx-auto shadow-md rounded'>
                 <span>{timeData[temperatureData.length - index-1]}</span>
                 <span>{temperatureData[temperatureData.length - index-1]}°C</span>
                 <span>{humidityData[temperatureData.length - index-1]}%</span>
@@ -184,9 +191,92 @@ export default function SensorModal({sensor,closeModal}) {
              ))
             }
           </div>
-
+</div>        
 </div>
-        
-    </div>
+</div>
+</div>
   )
+}
+
+
+function HistoryData(){
+  const [historyTemperatureData, setHistoryTemperatureData] = useState([]);
+  const [historyHumidityData, setHistoryHumidityData] = useState([]);
+  const [historyCo2Data, setHistoryCo2Data] = useState([]);
+  const [timeData, setTimeData] = useState([]);
+  
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    setInterval(() => {
+      setShow(true);
+    }, 1000);
+
+    async function fetchData(){
+      const historyDataUrl = '';
+      return;
+      await fetch(historyDataUrl).then((res) => res.json()).then((data) => {
+        setHistoryTemperatureData(data.temperature);
+        setHistoryHumidityData(data.humidity);
+        setHistoryCo2Data(data.co2);
+      });
+    }
+
+    fetchData();
+
+  }, []);
+
+
+
+  return (
+    <div className={`w-[70%] h-full relative transition-all transition-1000 ${!show?" hidden opacity-0":"opacity-100"} pt-12`}>
+      <h1 className='bold text-[30px] w-full'>History</h1>
+      <CustomChart title={"Temperature"} data={historyTemperatureData} time={timeData}/>
+      <CustomChart title={"Humidity"} data={historyHumidityData} time={timeData}/>
+      <CustomChart title={"Co2"} data={historyCo2Data} time={timeData}/>
+      </div>
+  );
+}
+
+
+function CustomChart({data,time,title}){
+  return <div className='w-full h-[25%]'>
+    <h2 className='my-10'>{title}</h2>
+    <div className='w-full h-[120px]'>
+  <Chart
+    type="line"
+    options={{
+      layout: {
+        padding: {
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+        },
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    }}
+    name="humidity graph"
+    data={{
+      labels: time,
+      datasets: [
+        {
+          label: "My First dataset",
+          data: data,
+          fill: false,
+          backgroundColor: "rgb(255, 99, 132)",
+          borderColor: "rgba(255, 99, 132, 0.2)",
+        },
+      ],
+    }}
+    />
+    </div>
+    </div>
+
 }
