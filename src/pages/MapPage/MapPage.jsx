@@ -41,24 +41,29 @@ export default function MapPage() {
   const [treesensors, setTreesensors] = useState([]);
   const [cameras, setCameras] = useState([]);
   const [windsensors, setWindsensors] = useState([]);
+  const [isMounted, setIsMounted] = useState(true);
 
   const [focusedElement, setFocusedElement] = useState({
     id: null,
     element: null,
   });
 
+  
   useEffect(() => {
-    // TODO fetch data from api
-    // fetch("http://localhost:3000/cameras")
-    //   .then((res) => res.json())
-    //   .then((data) => setCameras(data));
-    // fetch("http://localhost:3000/windsensors")
-    //   .then((res) => res.json())
-    //   .then((data) => setWindsensors(data));
+    setTreesensors([]);
+    setCameras([]);
+    setWindsensors([]);
+    setIsMounted(true);
 
-    // TODO remove dammy data
-
-    // setTreesensors(dammyData.treesensors);
+    // Cleanup function
+    return () => {
+      setIsMounted(false);
+    };
+  }, [id, lat, lng]);
+  
+  async function updateTreeSensorData(N) {
+    if (!isMounted) return;
+    
     fetch("https://iot.alkalyss.gr/trees").then((res) => {
       res.json().then((data) => {
         setTreesensors(data);
@@ -71,10 +76,24 @@ export default function MapPage() {
         setWindsensors(data);
       });
     });    
+  }
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      await updateTreeSensorData(10);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    };
 
-  }, []);
+    if (!isMounted) return;
 
-  console.log("udpate - 1");
+    setInterval(fetchData, 1000);
+
+    // Cleanup function
+    return () => {
+      setIsMounted(false);
+      clearInterval(fetchData);
+    };
+  }, [isMounted]);
 
   return (
     <div className="w-[100vw] h-[100vh]">
