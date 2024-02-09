@@ -7,7 +7,7 @@ import ControlMapView from "./components/ControlMap.jsx";
 import IconsExplanationView from "./components/IconsExplanation.jsx";
 
 // leaflet
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { LayersControl, MapContainer, Marker, TileLayer} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -15,6 +15,9 @@ import SensorModal from "./components/SensorModal/SensorModal.jsx";
 import CameraModal from "./components/CameraModal";
 import WindSensorModal from "./components/WindSensorModal";
 import TemperatureMap from "./components/TemperatureMap.jsx";
+import TreeSensorMarker from "./components/markers/TreeSensorMarker.jsx";
+import WindSensorMarker from "./components/markers/WindSensorMarker.jsx";
+import HeatMapView from "./components/HeatMapView.jsx";
 
 const mapboxAccessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
@@ -43,7 +46,7 @@ export default function MapPage() {
   const lat = searchParams.get("lat");
   const lng = searchParams.get("lng");
 
-  const [zoomLevel, setZoomLevel] = useState(10);
+  const [zoomLevel, setZoomLevel] = useState(12);
   // const zoomIn = () => setZoomLevel((prevZoom) => Math.min(prevZoom + 1, 20));
   // const zoomOut = () => setZoomLevel((prevZoom) => Math.max(prevZoom - 1, 1));
 
@@ -51,6 +54,7 @@ export default function MapPage() {
   const [cameras, setCameras] = useState([]);
   const [windsensors, setWindsensors] = useState([]);
   const [isMounted, setIsMounted] = useState(true);
+  const [showHeatMap, setShowHeatMap] = useState(true);
 
   const [focusedElement, setFocusedElement] = useState({
     id: null,
@@ -122,44 +126,19 @@ export default function MapPage() {
         doubleClickZoom={false}
         style={{ width: "100%", height: "100%", zIndex: 0 }}
       >
+        {
+          showHeatMap && <HeatMapView data={treesensors.map((sensor) => [sensor.location[0], sensor.location[1],Math.pow(Math.abs(sensor.temperature-20)/60,2)])} />
+        }
         <ControlMapView zoom={zoomLevel} setZoom={setZoomLevel} />
         <IconsExplanationView firePropability={60} />
-        <TemperatureMap />
+        <TemperatureMap setShowHeatMap={setShowHeatMap} />
         {/* TODO add firePropability from id and backend */}
         <TileLayer
           url={`https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
         />
         {treesensors.map((sensor) => {
           let color = SensorColorChoise(sensor.temperature);
-          return (
-            <Marker
-              key={"s-" + sensor.id}
-              position={[sensor.location[0], sensor.location[1]]}
-              icon={
-                focusedElement.id === "s-" + sensor.id
-                  ? new L.DivIcon({
-                      className: "custom-marker-icon",
-                      html: `<svg width="20" height="20" viewBox="0 0 32 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17.4695 4.97746L16 3.90983L14.5305 4.97746L5.01997 11.8873L3.55051 12.9549L4.11179 14.6824L7.74451 25.8627L8.30579 27.5902H10.1221H21.8779H23.6942L24.2555 25.8627L27.8882 14.6824L28.4495 12.9549L26.98 11.8873L17.4695 4.97746Z" fill="${color}" stroke="#880000" stroke-width="5"/>
-              </svg>
-              `,
-                      iconSize: [20, 20],
-                    })
-                  : new L.DivIcon({
-                      className: "custom-marker-icon",
-                      html: `<svg width="20" height="20" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 0L19.5106 6.90983L15.8779 18.0902H4.12215L0.489435 6.90983L10 0Z" fill="${color}"/>
-              </svg>`,
-                      iconSize: [20, 20],
-                    })
-              }
-              eventHandlers={{
-                click: () => {
-                  setFocusedElement({ id: "s-" + sensor.id, element: sensor });
-                },
-              }}
-            />
-          );
+          return ( <TreeSensorMarker key={"s-" + sensor.id} sensor={sensor} color={color} focusedElement={focusedElement} setFocusedElement={setFocusedElement} /> );
         })}
         {cameras.map((camera) => (
           <Marker
@@ -177,34 +156,8 @@ export default function MapPage() {
             }}
           />
         ))}
-        {windsensors.map((sensor) => (
-          <Marker
-            key={"w-" + sensor.id}
-            position={[sensor.location[0], sensor.location[1]]}
-            icon={
-              focusedElement.id === "w-" + sensor.id
-              ? new L.DivIcon({
-                className: "custom-marker-icon",
-                html: `<div><svg width="20" height="20" viewBox="0 0 44 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4.67949 35L22 5L39.3205 35H4.67949Z" fill="#93EF2A" stroke="black" stroke-width="5"/>
-                </svg><svg class="w-svg" style="display: none;" value="${sensor.windDirection+45}" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 32 32"><path d="M3.41 2H16V0H1a1 1 0 0 0-1 1v16h2V3.41l28.29 28.3 1.41-1.41z" data-name="7-Arrow Up"/></svg></div>`,
-                iconSize: [20, 20],
-              })
-              : new L.DivIcon({
-                className: "custom-marker-icon",
-                html: `<div><svg width="20" height="20" viewBox="0 0 44 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4.67949 35L22 5L39.3205 35H4.67949Z" fill="#93EF2A" stroke="black" stroke-width="5"/>
-                </svg><svg class="w-svg" style="display: none;" value="${sensor.windDirection+45}" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 32 32"><path d="M3.41 2H16V0H1a1 1 0 0 0-1 1v16h2V3.41l28.29 28.3 1.41-1.41z" data-name="7-Arrow Up"/></svg></div>`,
-                iconSize: [20, 20],
-              })
-            }
-            eventHandlers={{
-              click: () => {
-                setFocusedElement({ id: "w-" + sensor.id, element: sensor });
-              },
-            }}
-            />
-        ))}
+        {windsensors.map((sensor) => ( <WindSensorMarker key={"w-" + sensor.id} sensor={sensor} focusedElement={focusedElement} setFocusedElement={setFocusedElement} /> ))}
+        
         {focusedElement.id && focusedElement.id[0] === "s" && (
           <SensorModal
             key={focusedElement.id}
@@ -226,6 +179,7 @@ export default function MapPage() {
             closeModal={(e) => setFocusedElement({ id: null, element: null })}
           />
         )}
+
       </MapContainer>
     </div>
   );
