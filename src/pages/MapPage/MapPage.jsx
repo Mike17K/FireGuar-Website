@@ -127,7 +127,7 @@ export default function MapPage() {
         style={{ width: "100%", height: "100%", zIndex: 0 }}
       >
         {
-          showHeatMap && <HeatMapView data={treesensors.map((sensor) => [sensor.location[0], sensor.location[1],Math.pow(Math.abs(sensor.temperature-20)/60,2)])} />
+          showHeatMap && <HeatMapView data={treesensors.map((sensor) => [sensor.location[0], sensor.location[1],sensor.temperature])} />
         }
         <ControlMapView zoom={zoomLevel} setZoom={setZoomLevel} />
         <IconsExplanationView firePropability={60} />
