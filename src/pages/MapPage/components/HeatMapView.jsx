@@ -20,9 +20,8 @@ export default function HeatMapView({data}) {
             dataMid.push([d[0],d[1], 1]);
           }
         } else if (d[2] >= 30) {
-          if (d[2] < 80){
+          if (d[2] < 75){
             dataMid.push([d[0], d[1], 1]);
-            dataHigh.push([d[0],d[1], 1]);
           } else {
             dataHigh.push([d[0],d[1], 1]);
           }
@@ -34,19 +33,19 @@ export default function HeatMapView({data}) {
         radius: 50,
         blur: 40,
         gradient: {0.5: 'orange', 1: 'red'},
-        minOpacity: 1,
+        minOpacity: 0.8,
         }).addTo(map); 
       var midHeat = L.heatLayer(dataMid, {
           radius: 50,
           blur: 40,
           gradient: {0.5:'yellow' ,1: 'orange'},
-          minOpacity: 0.8,
+          minOpacity: 0.2,
           }).addTo(map); 
       var lowHeat = L.heatLayer(dataLow, {
           radius: 50,
           blur: 80,
-          gradient: {1: 'lime'},
-          minOpacity: 0.5,
+          gradient: {0.5: 'lime'},
+          minOpacity: 0.2,
           }).addTo(map); 
 
       return () => {
