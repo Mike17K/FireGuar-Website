@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./MapPage.css";
 import dammyData from "./dammyData.json";
@@ -14,7 +14,7 @@ import "leaflet/dist/leaflet.css";
 import SensorModal from "./components/SensorModal/SensorModal.jsx";
 import CameraModal from "./components/CameraModal";
 import WindSensorModal from "./components/WindSensorModal";
-import TemperatureMap from "./components/TemperatureMap.jsx";
+import TemperatureMap from "./components/TemperatureMap/TemperatureMap.jsx";
 import TreeSensorMarker from "./components/markers/TreeSensorMarker.jsx";
 import WindSensorMarker from "./components/markers/WindSensorMarker.jsx";
 import HeatMapView from "./components/HeatMapView.jsx";
@@ -60,7 +60,6 @@ export default function MapPage() {
     id: null,
     element: null,
   });
-
   
   useEffect(() => {
     setTreesensors([]);
@@ -137,7 +136,7 @@ export default function MapPage() {
           url={`https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
         />
         {treesensors.map((sensor) => {
-          let color = SensorColorChoise(sensor.temperature);
+          let color = getColor(sensor.temperature);
           return ( <TreeSensorMarker key={"s-" + sensor.id} sensor={sensor} color={color} focusedElement={focusedElement} setFocusedElement={setFocusedElement} /> );
         })}
         {cameras.map((camera) => (
@@ -185,6 +184,30 @@ export default function MapPage() {
   );
 }
 
-function SensorColorChoise(value) {
-  return value < 30 ? "#93EF2A" : value < 60 ? "#EFE72A" : "#D52A2A";
+function getColor(t,MaxTemp=100){
+  const clampTemp = t > MaxTemp ? MaxTemp : t < 0 ? 0 : t;
+
+  const green = [34,197,94];
+  const persentGreen = 0.5;
+  const yellow = [234,172,10];
+  const red = [221,52,35];
+  if(t < MaxTemp * persentGreen){
+    const factor = clampTemp / (MaxTemp * persentGreen);
+    // bettwen green and yellow
+    const R = interpolateValue(green[0], yellow[0], factor);
+    const G = interpolateValue(green[1], yellow[1], factor);
+    const B = interpolateValue(green[2], yellow[2], factor);
+    return `rgb(${R},${G},${B})`;
+  }else{
+    // bettwen yellow and red
+    const factor = (clampTemp - (MaxTemp * persentGreen)) / (MaxTemp * (1 - persentGreen));
+    const R = interpolateValue(yellow[0], red[0], factor);
+    const G = interpolateValue(yellow[1], red[1], factor);
+    const B = interpolateValue(yellow[2], red[2], factor);
+    return `rgb(${R},${G},${B})`;
+  }
+}
+
+function interpolateValue(v1, v2, factor) {
+  return v1 + (v2 - v1) * factor;
 }

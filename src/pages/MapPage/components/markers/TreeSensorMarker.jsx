@@ -21,7 +21,7 @@ export default function TreeSensorMarker({sensor,color,focusedElement,setFocused
             : new L.DivIcon({
                 className: "custom-marker-icon",
                 html: `<svg width="20" height="20" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 0L19.5106 6.90983L15.8779 18.0902H4.12215L0.489435 6.90983L10 0Z" fill="${color}"/>
+        <path d="M10 0L19.5106 6.90983L15.8779 18.0902H4.12215L0.489435 6.90983L10 0Z" fill="${color}" stroke="#000000" stroke-width="1"/>
         </svg>`,
                 iconSize: [20, 20],
             })
