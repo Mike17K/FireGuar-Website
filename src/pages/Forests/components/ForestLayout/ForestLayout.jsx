@@ -48,34 +48,50 @@ export default function ForestLayout({ data }) {
     cameraImageUrls,
   } = data;
 
-  const [temperatureData, setTemperatureData] = useState([20, 30, 40, 50, 60, 70]);
-  const [humidityData, setHumidityData] = useState([20, 30, 40, 50, 60, 70]);
-  const [windSpeedData, setWindSpeedData] = useState([2, 3, 4, 5, 6, 7]);
+  const [temperatureData, setTemperatureData] = useState([]);
+  const [humidityData, setHumidityData] = useState([]);
+  const [windSpeedData, setWindSpeedData] = useState([]);
+  const [timeData, setTimeData] = useState([]);
 
-  //TODO make it call api instead of random from urls
+  
   useEffect(() => {
-    // no interval - for the hole day fetch data from backend
-    const temperatureUrl = '';
-    const humidityUrl = '';
-    const windSpeedUrl = '';
+    async function fetchData(){
+      const historyDataUrl = 'https://iot.alkalyss.gr/history/' + "wind_sensor_1";
+      // fetching data
+      await fetch(historyDataUrl).then((res) => res.json()).then((data) => {
+          let windSpeedData = [];          
+          data.forEach((d) => {
+              windSpeedData.push(d.windSpeed);
+          });
+          setWindSpeedData(windSpeedData);
+      });
+    }
 
-    fetch(temperatureUrl).then((res) => res.json()).then((data) => {
-      // data length: 100
-      // data: list<temperature> one for each hour
-      setTemperatureData(data);
-    });
+    fetchData();
+  }, []);
 
-    fetch(humidityUrl).then((res) => res.json()).then((data) => {
-      // data length: 100
-      // data: list<humidity> one for each hour
-      setHumidityData(data);
-    });
+  useEffect(() => {
+    async function fetchData(){
+      const historyDataUrl = 'https://iot.alkalyss.gr/history/' + "tree_sensor_1";
+      // fetching data
+      await fetch(historyDataUrl).then((res) => res.json()).then((data) => {
+          let temperatureData = [];
+          let humidityData = [];
+          let co2Data = [];
+          let timeData = [];
+          data.forEach((d) => {
+              temperatureData.push(d.temperature);
+              humidityData.push(d.humidity);
+              co2Data.push(d.co2);
+              timeData.push(d.dateObserved);
+          });
+        setTemperatureData(temperatureData);
+        setHumidityData(humidityData);
+        setTimeData(timeData);
+      });
+    }
 
-    fetch(windSpeedUrl).then((res) => res.json()).then((data) => {
-      // data length: 100
-      // data: list<windSpeed> one for each hour
-      setWindSpeedData(data);
-    });
+    fetchData();
   }, []);
 
   const [cameraImages, setCameraImages] = useState([]);
@@ -138,18 +154,21 @@ export default function ForestLayout({ data }) {
         <div className="flex flex-col h-full justify-between">
           <h2>History</h2>
           <DataGraphs
-            img={"icons/temperature.png"}
-            data={temperatureData}
-            measurement="°C"
+          time={timeData}
+          img={"icons/temperature.png"}
+          data={temperatureData}
+          measurement="°C"
           />
 
           <DataGraphs
-            img={"icons/humidity.png"}
-            data={humidityData}
-            measurement="%"
+          time={timeData}
+          img={"icons/humidity.png"}
+          data={humidityData}
+          measurement="%"
           />
 
           <DataGraphs
+          time={timeData}
             img={"icons/wind.png"}
             data={windSpeedData}
             measurement="m/s"
@@ -206,7 +225,7 @@ export default function ForestLayout({ data }) {
   );
 }
 
-function DataGraphs({ img, data, measurement }) {
+function DataGraphs({ img, time, data, measurement }) {
   const currentValue = data.length > 0 ? data[data.length - 1] : " - ";
   return (
     <div className="flex gap-2 items-center justify-between w-full">
@@ -234,7 +253,7 @@ function DataGraphs({ img, data, measurement }) {
           }}
           name="humidity graph"
           data={{
-            labels: ["1am","2am","3am","4am","5am","6am","7am","8am","9am","10am","11am","12am", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm","12pm"],
+            labels: time,
             datasets: [
               {
                 label: "My First dataset",
@@ -250,7 +269,7 @@ function DataGraphs({ img, data, measurement }) {
       <div className="flex items-center justify-between gap-2 flex-shrink-0 w-[100px]">
         <img src={img} alt="humidity icon" className="w-[50px] h-[50px]" />
         <span className="w-[50px] text-right">
-          {currentValue}
+          {Math.floor(currentValue*100)/100}
           {measurement}
         </span>
       </div>

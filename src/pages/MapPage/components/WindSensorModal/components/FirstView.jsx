@@ -16,7 +16,7 @@ ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement);
 
 
 // TODO implement this component
-export default function WindSensorModal({station,closeModal}) {
+export default function FirstView({station,closeModal,setIsHistoryDataModalOpen}) {
   const { id, location, dateObserved,windDirection,windSpeed } = station;
   const [lat, lng] = location;
 
@@ -90,7 +90,7 @@ export default function WindSensorModal({station,closeModal}) {
   }, [isMounted]);
 
   return (
-    <div className='z-[10000] fixed right-4 top-[6rem] bg-white bottom-4 w-[300px] rounded-lg px-10 cursor-default'>
+    <div className='w-[250px] h-full absolute right-2'>
         <button onClick={closeModal} className='absolute right-2 top-1 font-bold hover:bg-red-500 w-6 h-6 rounded-full hover:text-white text-center items-center'>x</button>
 
         <div className='text-center text-[1.5rem] mt-[20px]'>
@@ -118,6 +118,7 @@ export default function WindSensorModal({station,closeModal}) {
         
         <div className='flex flex-col justify-center items-center h-[70%] w-[80%] absolute left-2 right-2 bottom-2 mx-auto'>
           <h1 className='text-[25px]'>History</h1>
+          <button onClick={()=>setIsHistoryDataModalOpen(prev =>!prev)} className="bg-blue-500 text-white rounded-md w-[50px] h-[30px] text-[10px]">Show All</button>
           <div>
         <Chart
           type="line"
