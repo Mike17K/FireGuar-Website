@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 // chartjs
 import { Chart } from "react-chartjs-2";
@@ -25,6 +25,8 @@ export default function WindSensorModal({station,closeModal}) {
   const [windSpeedData, setWindSpeedData] = useState([Math.floor(windSpeed*100)/100]);
   const [timeData, setTimeData] = useState([new Date(dateObserved).toLocaleTimeString([], { hour12: true })]);
 
+  const compassRef = useRef(null);
+
   useEffect(() => {
     setIsMounted(true);
     // Cleanup function
@@ -42,6 +44,8 @@ export default function WindSensorModal({station,closeModal}) {
         console.log("Error: " + err);
         return null;
       });
+
+      if(compassRef.current ) compassRef.current.style.transform = `rotate(${windDirectionData[windDirectionData.length-1]-45}deg)`;
 
     if (newData === null) return;
 
@@ -85,8 +89,6 @@ export default function WindSensorModal({station,closeModal}) {
     };
   }, [isMounted]);
 
- 
-
   return (
     <div className='z-[10000] fixed right-4 top-[6rem] bg-white bottom-4 w-[300px] rounded-lg px-10 cursor-default'>
         <button onClick={closeModal} className='absolute right-2 top-1 font-bold hover:bg-red-500 w-6 h-6 rounded-full hover:text-white text-center items-center'>x</button>
@@ -102,7 +104,7 @@ export default function WindSensorModal({station,closeModal}) {
         </div>
         <div className='text-[1rem] mt-[20px] flex items-center justify-between gap-2'>
           <div className='flex items-center justify-center gap-2'>
-            <img src="icons/compass.png" alt="temp icon" width={30} height={30}/>
+            <img src="icons/compass.png" ref={compassRef} alt="temp icon" width={30} height={30}/>
             {windDirectionData.length > 0?windDirectionData[windDirectionData.length-1]:"-"}°
           </div>
           <div className='flex items-center justify-center gap-2'>
