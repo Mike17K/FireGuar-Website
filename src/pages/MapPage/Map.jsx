@@ -121,13 +121,6 @@ export default function MapPage({lat,lng,id,focusedElement,setFocusedElement}) {
     };
   }, [isMounted]);
 
-  useEffect(() => {
-    document.querySelectorAll(".w-svg").forEach((el) => {
-      el.style.transform = `rotate(${el.getAttribute("value")}deg)`;
-      el.style.display = "block";
-    });
-  }, [windsensors]);
-
   return (
       <MapContainer
         zoom={zoomLevel}

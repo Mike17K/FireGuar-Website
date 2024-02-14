@@ -5,7 +5,7 @@ export default function IconsExplanation({ firePropability }) {
   const propRef = useRef(null);
 
   useEffect(() => {
-    const color = ColorChoise(firePropability);
+    const color = getColor(firePropability,100);
     propRef.current.style.backgroundColor = color;
   }, [firePropability]);
 
@@ -67,6 +67,30 @@ export default function IconsExplanation({ firePropability }) {
   );
 }
 
-function ColorChoise(value) {
-  return value < 30 ? "#93EF2A" : value < 60 ? "#EFE72A" : "#D52A2A";
+function getColor(t,MaxTemp=100){
+  const clampTemp = t > MaxTemp ? MaxTemp : t < 0 ? 0 : t;
+
+  const green = [34,197,94];
+  const persentGreen = 0.5;
+  const yellow = [234,172,10];
+  const red = [221,52,35];
+  if(t < MaxTemp * persentGreen){
+    const factor = clampTemp / (MaxTemp * persentGreen);
+    // bettwen green and yellow
+    const R = interpolateValue(green[0], yellow[0], factor);
+    const G = interpolateValue(green[1], yellow[1], factor);
+    const B = interpolateValue(green[2], yellow[2], factor);
+    return `rgb(${R},${G},${B})`;
+  }else{
+    // bettwen yellow and red
+    const factor = (clampTemp - (MaxTemp * persentGreen)) / (MaxTemp * (1 - persentGreen));
+    const R = interpolateValue(yellow[0], red[0], factor);
+    const G = interpolateValue(yellow[1], red[1], factor);
+    const B = interpolateValue(yellow[2], red[2], factor);
+    return `rgb(${R},${G},${B})`;
+  }
+}
+
+function interpolateValue(v1, v2, factor) {
+  return v1 + (v2 - v1) * factor;
 }
