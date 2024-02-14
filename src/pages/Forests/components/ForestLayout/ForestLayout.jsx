@@ -40,7 +40,7 @@ function ForeestColor(propability) {
 const mapboxAccessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
 export default function ForestLayout({ data }) {
-  const { id, name, forestFirePropability, location } = data;
+  const { id, name, location } = data;
   const {
     curentTemperatureUrl,
     curentHumidityUrl,
@@ -52,22 +52,34 @@ export default function ForestLayout({ data }) {
   const [humidityData, setHumidityData] = useState([]);
   const [windSpeedData, setWindSpeedData] = useState([]);
   const [timeData, setTimeData] = useState([]);
-
+  const [forestStatus, setForestStatus] = useState({
+    "dateObserved": "2024-02-14T21:25:25.052Z",
+    "fireDetected": true,
+    "fireDetectedConfidence": 0,
+    "location": [
+      [
+        [
+          null,
+          null
+        ]
+      ]
+    ]
+  });
   
   useEffect(() => {
     async function fetchData(){
-      const historyDataUrl = 'https://iot.alkalyss.gr/history/' + "wind_sensor_1";
+      const forestStatusUrl = 'https://iot.alkalyss.gr/forest_status';
       // fetching data
-      await fetch(historyDataUrl).then((res) => res.json()).then((data) => {
-          let windSpeedData = [];          
-          data.forEach((d) => {
-              windSpeedData.push(d.windSpeed);
-          });
-          setWindSpeedData(windSpeedData);
+      await fetch(forestStatusUrl).then((res) => res.json()).then((data) => {
+        setForestStatus(data);
       });
     }
+    setInterval(fetchData, 2000);
 
-    fetchData();
+    // Cleanup function
+    return () => {
+      clearInterval(fetchData);
+    };
   }, []);
 
   useEffect(() => {
@@ -94,6 +106,18 @@ export default function ForestLayout({ data }) {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    async function fetchData(){
+      const forestStatusUrl = 'https://iot.alkalyss.gr/forest_status';
+      // fetching data
+      await fetch(forestStatusUrl).then((res) => res.json()).then((data) => {
+        setForestStatus(data);
+      });
+    }
+
+    fetchData();
+  }, []);
+
   const [cameraImages, setCameraImages] = useState([]);
 
   //TODO make it call api for photos
@@ -108,7 +132,7 @@ export default function ForestLayout({ data }) {
       to={"/map?id=" + id + "&lat=" + location.lat + "&lng=" + location.lng}
       className={
         `w-full h-[366px] rounded-[13px] p-4 shadow-inner shadow-gray-600 ` +
-        ForeestColor(forestFirePropability)
+        ForeestColor(forestStatus.fireDetectedConfidence)
       }
     >
       <div className="text-2xl font-bold">{name}</div>
@@ -147,7 +171,7 @@ export default function ForestLayout({ data }) {
           <div className="flex gap-4 justify-center items-center">
             <div>Fire Propability</div>
             <div className="w-[4rem] aspect-square rounded-full border-2 border-black bg-white flex justify-center items-center text-lg">
-              {Math.floor(forestFirePropability * 100)}%
+              {Math.floor(forestStatus.fireDetectedConfidence * 100)}%
             </div>
           </div>
         </div>

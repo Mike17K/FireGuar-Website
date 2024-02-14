@@ -59,7 +59,7 @@ export default function IconsExplanation({ firePropability }) {
       )}
       <div
         ref={propRef}
-        className={`absolute left-0 flex justify-center items-center w-[80px] border-2 border-black aspect-square text-white rounded-full`}
+        className={`absolute left-0 flex justify-center items-center w-[80px] border-2 border-black aspect-square text-black rounded-full`}
       >
         {firePropability}%
       </div>

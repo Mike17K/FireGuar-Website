@@ -45,6 +45,35 @@ export default function MapPage({lat,lng,id,focusedElement,setFocusedElement}) {
   const [windsensors, setWindsensors] = useState([]);
   const [isMounted, setIsMounted] = useState(true);
   const [showHeatMap, setShowHeatMap] = useState(true);
+  const [forestStatus, setForestStatus] = useState({
+    "dateObserved": "2024-02-14T21:25:25.052Z",
+    "fireDetected": true,
+    "fireDetectedConfidence": 0,
+    "location": [
+      [
+        [
+          null,
+          null
+        ]
+      ]
+    ]
+  });
+
+  useEffect(() => {
+    async function fetchData(){
+      const forestStatusUrl = 'https://iot.alkalyss.gr/forest_status';
+      // fetching data
+      await fetch(forestStatusUrl).then((res) => res.json()).then((data) => {
+        setForestStatus(data);
+      });
+    }
+    setInterval(fetchData, 2000);
+
+    // Cleanup function
+    return () => {
+      clearInterval(fetchData);
+    };
+  }, []);
   
   useEffect(() => {
     setTreesensors([]);
@@ -113,7 +142,7 @@ export default function MapPage({lat,lng,id,focusedElement,setFocusedElement}) {
           showHeatMap && <HeatMapView data={treesensors.map((sensor) => [sensor.location[0], sensor.location[1],sensor.temperature])} />
         }
         <ControlMapView zoom={zoomLevel} setZoom={setZoomLevel} />
-        <IconsExplanationView firePropability={60} />
+        <IconsExplanationView firePropability={Math.round(forestStatus.fireDetectedConfidence*100)} />
         <TemperatureMap setShowHeatMap={setShowHeatMap} />
         {/* TODO add firePropability from id and backend */}
         <TileLayer
